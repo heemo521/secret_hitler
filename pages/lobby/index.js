@@ -1,4 +1,7 @@
 import React from 'react';
+import GameList from '../../components/lobby/GameList';
+import SecretOne from '../../public/secret1.jpg';
+import SecretTwo from '../../public/secret2.jpg';
 import PropTypes from 'prop-types';
 
 function Lobby(props) {
@@ -16,38 +19,52 @@ function Lobby(props) {
       name: 'player 3',
     },
   ];
+
+  const lorem = `
+  Lorem ipsum dolor sit amet, 
+  consectet  unde omnis, sed do eiusmod 
+  tempor incididunt ut labore  et dolore 
+  magna aliqua.
+  `; //  # lorem ipsum 100
+
   const dummyGameData = [
     {
-      id: 'dummy', //url to the game
-      game: 'secret_hitler', // separate game logic for separation of concerns and possible future integration of other board games
+      id: 0, //url to the game
+      gameType: 'secret_hitler', // separate game logic for separation of concerns and possible future integration of other board games
       title: 'dummy', //title of the game
-      description: 'dummy', //description of the game if any
+
+      description: lorem, //description of the game if any
       players: players,
-      image: null,
+      image: SecretOne,
       maxPlayers: 10, //min 5 players and max 10 players
     },
     {
-      id: 'dummy2', //url to the game
-      game: 'secret_hitler',
+      id: 1, //url to the game
+      gameType: 'secret_hitler',
       title: 'dummy2', //title of the game
-      description: 'dummy2', //description of the game if any
+      description: lorem, //description of the game if any
       players: players,
-      image: null,
+      image: SecretOne,
       maxPlayers: 8,
     },
     {
-      id: 'dummy3', //url to the game
+      id: 2, //url to the game
+      gameType: 'secret_hitler',
       title: 'dummy3', //title of the game
-      description: 'dummy3', //description of the game if any
+      description: lorem, //description of the game if any
       players: players,
-      image: null,
+      image: SecretTwo,
       maxPlayers: 8,
     },
   ];
 
   // list of games in the lobby and when clicked on details button, can see details on the players
-
-  return <h1>Lobby</h1>;
+  return (
+    <div>
+      <h1>Lobby Game List:</h1>
+      <GameList games={dummyGameData} />
+    </div>
+  );
 }
 
 Lobby.propTypes = {};

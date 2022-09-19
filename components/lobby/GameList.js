@@ -11,7 +11,7 @@ function GameList({ games }) {
         <GameItem
           key={game.id}
           id={game.id}
-          game={game.game} // TODO: sort by game etc.
+          gameType={game.gameType} // TODO: sort by game etc.
           image={game.image}
           title={game.title}
           description={game.description}
@@ -21,8 +21,8 @@ function GameList({ games }) {
   );
 }
 
-GameList.propTypes = {
-  games: PropTypes.array.isRequired,
-};
+// GameList.propTypes = {
+//   games: PropTypes.array.isRequired,
+// };
 
 export default GameList;
