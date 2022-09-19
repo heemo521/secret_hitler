@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 function GameItem({ id, gameType, image, title, description }) {
   return (
     <li>
-      <Link href={'/'}>{title}</Link>
+      <Link href={'/' + id}>{title}</Link>
       <div>
         <Image src={image} alt={title} width={500} height={500} />
         <p>{description}</p>
