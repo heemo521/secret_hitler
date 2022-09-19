@@ -19,7 +19,8 @@ function Lobby(props) {
   const dummyGameData = [
     {
       id: 'dummy', //url to the game
-      name: 'dummy', //name of the game
+      game: 'secret_hitler', // separate game logic for separation of concerns and possible future integration of other board games
+      title: 'dummy', //title of the game
       description: 'dummy', //description of the game if any
       players: players,
       image: null,
@@ -27,7 +28,8 @@ function Lobby(props) {
     },
     {
       id: 'dummy2', //url to the game
-      name: 'dummy2', //name of the game
+      game: 'secret_hitler',
+      title: 'dummy2', //title of the game
       description: 'dummy2', //description of the game if any
       players: players,
       image: null,
@@ -35,7 +37,7 @@ function Lobby(props) {
     },
     {
       id: 'dummy3', //url to the game
-      name: 'dummy3', //name of the game
+      title: 'dummy3', //title of the game
       description: 'dummy3', //description of the game if any
       players: players,
       image: null,
