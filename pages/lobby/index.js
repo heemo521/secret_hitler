@@ -1,71 +1,88 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import GameForm from '../../components/lobby/GameForm';
 import GameList from '../../components/lobby/GameList';
-import SecretOne from '../../public/secret1.jpg';
-import SecretTwo from '../../public/secret2.jpg';
-import PropTypes from 'prop-types';
+import { generateRoomWithoutSeparator } from '../../components/utils/roomNameGenerator';
 
-function Lobby(props) {
-  const players = [
-    {
-      id: 1,
-      name: 'player 1',
-    },
-    {
-      id: 2,
-      name: 'player 2',
-    },
-    {
-      id: 3,
-      name: 'player 3',
-    },
-  ];
+import { dummyGameData } from './dummyData';
+// import PropTypes from 'prop-types';
 
-  const lorem = `
-  Lorem ipsum dolor sit amet, 
-  consectet  unde omnis, sed do eiusmod 
-  tempor incididunt ut labore  et dolore 
-  magna aliqua.
-  `; //  # lorem ipsum 100
+function Lobby() {
+  const router = useRouter();
+  const tempRegisteredGameHash = {
+    gameMaster: '',
+    MyApp: ['player1'],
+  };
 
-  const dummyGameData = [
-    {
-      id: 0, //url to the game
-      gameType: 'secret_hitler', // separate game logic for separation of concerns and possible future integration of other board games
-      title: 'dummy', //title of the game
+  const registerPlayer = async (playerRegistrationData) => {
+    const { enteredName, roomCode, gameMaster } = playerRegistrationData;
+    // player registered
+    if (gameMaster) {
+      tempRegisteredGameHash[gameMaster] = enteredName;
+      tempRegisteredGameHash[roomCode] = tempRegisteredGameHash[roomCode] || [];
+    }
 
-      description: lorem, //description of the game if any
-      players: players,
-      image: SecretOne,
-      maxPlayers: 10, //min 5 players and max 10 players
-    },
-    {
-      id: 1, //url to the game
-      gameType: 'secret_hitler',
-      title: 'dummy2', //title of the game
-      description: lorem, //description of the game if any
-      players: players,
-      image: SecretOne,
-      maxPlayers: 8,
-    },
-    {
-      id: 2, //url to the game
-      gameType: 'secret_hitler',
-      title: 'dummy3', //title of the game
-      description: lorem, //description of the game if any
-      players: players,
-      image: SecretTwo,
-      maxPlayers: 8,
-    },
-  ];
+    tempRegisteredGameHash[roomCode].push(enteredName);
+    return true;
+  };
+
+  const verifyAndRegister = async (enteredName) => {
+    // verify that this room code does not already exist and register it to the server
+    // once that is done, then redirect the user to the game page  do {
+    let roomCode;
+    let isValidAndRegistered;
+    let tryCount = 0;
+
+    do {
+      roomCode = generateRoomWithoutSeparator();
+      //   isValidAndRegistered = await axios('/api/v1/rooms/' + roomCode);
+      isValidAndRegistered = roomCode in tempRegisteredGameHash;
+      tryCount++;
+    } while (!isValidAndRegistered && tryCount < 10);
+
+    console.log(isValidAndRegistered && 'Room is Valid and Registered');
+    console.log('Room Code is ' + roomCode);
+    console.log('We will redirect the user to the game page shortly');
+
+    const playerRegistrationData = {
+      enteredName,
+      roomCode,
+      gameMaster: true,
+    };
+
+    await registerPlayer(playerRegistrationData);
+
+    console.log('Player is registered');
+
+    await setTimeout(() => {
+      router.push('/rooms/' + roomCode);
+    }, 3000);
+  };
+
+  const verifyAndRedirect = async (enteredName, roomCode) => {
+    const playerRegistrationData = {
+      enteredName,
+      roomCode,
+      gameMaster: false,
+    };
+
+    await registerPlayer(playerRegistrationData);
+
+    await setTimeout(() => {
+      router.push('/rooms/' + roomCode);
+    }, 3000);
+  };
 
   const createGameHandler = (enteredName) => {
     console.log('entering a new room as ' + enteredName);
+
+    verifyAndRegister(enteredName);
   };
 
   const enterGameHandler = ({ enteredName, enteredRoomCode }) => {
     console.log('entering the room as ' + enteredName);
     console.log('room code is ', enteredRoomCode);
+    verifyAndRedirect(enteredName, enteredRoomCode);
   };
 
   // selecting a display game will prefill the game and attempt to submit the form
@@ -84,6 +101,6 @@ function Lobby(props) {
   );
 }
 
-Lobby.propTypes = {};
+// Lobby.propTypes = {};
 
 export default Lobby;

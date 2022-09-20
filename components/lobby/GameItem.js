@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/Image';
-// import { Link, Image } from 'next';
+
 import PropTypes from 'prop-types';
 
 function GameItem({ id, gameType, image, title, description }) {
