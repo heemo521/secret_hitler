@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import WaitingRoom from '../../../components/rooms/WaitingRoom';
+import GameBoard from '../../../components/game/GameBoard';
 import PropTypes from 'prop-types';
 
 function Game() {
@@ -21,6 +22,7 @@ function Game() {
     //make sure that this room exists and this player is registered
     // if not registered then spectator?
     // axios(roomCode)
+    console.log(roomCode);
     setRoomCodeValidity(true);
   }
 
@@ -31,7 +33,12 @@ function Game() {
   if (!startGame) {
     return <WaitingRoom roomCode={roomCode} />;
   }
-  return <h1>Room Code: {roomCode}</h1>;
+  return (
+    <div>
+      <h1>Game Board</h1>
+      <GameBoard />
+    </div>
+  );
 }
 
 Game.propTypes = {};

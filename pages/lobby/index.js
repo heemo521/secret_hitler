@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import GameForm from '../../components/lobby/GameForm';
 import GameList from '../../components/lobby/GameList';
@@ -91,7 +92,11 @@ function Lobby() {
 
   return (
     <div>
+      <h2>
+        <Link href="/"> Take Me Back Home Please</Link>
+      </h2>
       {/* will look like a search bar */}
+
       <GameForm
         onCreateGame={createGameHandler}
         onJoinGame={enterGameHandler}
