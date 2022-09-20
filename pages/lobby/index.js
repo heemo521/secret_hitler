@@ -1,4 +1,5 @@
 import React from 'react';
+import GameForm from '../../components/lobby/GameForm';
 import GameList from '../../components/lobby/GameList';
 import SecretOne from '../../public/secret1.jpg';
 import SecretTwo from '../../public/secret2.jpg';
@@ -58,10 +59,14 @@ function Lobby(props) {
     },
   ];
 
-  // list of games in the lobby and when clicked on details button, can see details on the players
+  // selecting a display game will prefill the game and attempt to submit the form
+  // to navigate the user to the game, however if the display name has not been set,
+  // then the form will fail and will display warning
+
   return (
     <div>
-      <h1>Lobby Game List:</h1>
+      {/* will look like a search bar */}
+      <GameForm />
       <GameList games={dummyGameData} />
     </div>
   );
