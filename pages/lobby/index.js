@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import GameForm from '../../components/lobby/GameForm';
@@ -10,6 +11,13 @@ import { dummyGameData } from './dummyData';
 
 function Lobby() {
   const router = useRouter();
+  const [lobbyList, setLobbyList] = useState();
+
+  useEffect(() => {
+    axios('/game-list')
+      .then(({ list }) => setLobbyList(list))
+      .catch((err) => console.error('error fetching game list' + err));
+  });
   const tempRegisteredGameHash = {
     gameMaster: '',
     MyApp: ['player1'],
@@ -76,13 +84,14 @@ function Lobby() {
 
   const createGameHandler = (enteredName) => {
     console.log('entering a new room as ' + enteredName);
-
     verifyAndRegister(enteredName);
   };
 
   const enterGameHandler = ({ enteredName, enteredRoomCode }) => {
     console.log('entering the room as ' + enteredName);
     console.log('room code is ', enteredRoomCode);
+    if (!enteredName || !enteredRoomCode)
+      return console.error('Empty inputs!!!');
     verifyAndRedirect(enteredName, enteredRoomCode);
   };
 
@@ -108,4 +117,5 @@ function Lobby() {
 
 // Lobby.propTypes = {};
 
+export function getStaticProps() {}
 export default Lobby;

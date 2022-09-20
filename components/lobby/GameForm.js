@@ -24,7 +24,8 @@ function GameForm({ onCreateGame, onJoinGame }) {
 
     if (selectedAction === 'join') {
       if (!enteredRoomCode)
-        return console.error('enter the room code to join a game?');
+        return console.error('can you enter the name at least?');
+
       return onJoinGame({ enteredName, enteredRoomCode }) && null;
     }
 
@@ -33,55 +34,38 @@ function GameForm({ onCreateGame, onJoinGame }) {
 
   return (
     <div className="card">
+      <div>
+        <h4>Instructions:</h4>
+        <p>
+          To create a game, enter a display name. Or to join a game, enter the
+          room code as well. To join a open public game, choose from the list
+          below after entering a display name.
+        </p>
+      </div>
       <form className="form">
-        <div>
-          <div>
-            <div className="control">
-              <label htmlFor="name">
-                To create a new game, just create a display name =>
-              </label>{' '}
-              <input
-                type="text"
-                id="name"
-                placeholder="Display Name"
-                ref={displayNameRef}
-              />
-            </div>
-            <div>
-              <span>and then click on create game ==> </span>
-              <button
-                data-action="create"
-                className="create-btn"
-                onClick={submitHandler}
-              >
-                Create Game
-              </button>
-            </div>
-          </div>
-          <div>
-            <div className="control">
-              <label htmlFor="room_code">
-                Or to join an existing game, fil out the room code here as well
-                ==>
-              </label>{' '}
-              <input
-                type="text"
-                id="room_code"
-                placeholder="Room Code"
-                ref={roomCodeRef}
-              />
-            </div>
-            <div>
-              <span>and then click ==> </span>
-              <button
-                data-action="join"
-                className="join-btn"
-                onClick={submitHandler}
-              >
-                Join Game
-              </button>
-            </div>
-          </div>
+        <div className="control">
+          <label htmlFor="name">Display Name</label>
+          <input type="text" id="name" ref={displayNameRef} />
+        </div>
+        <div className="control">
+          <label htmlFor="room_code">Room Code</label>
+          <input type="text" id="room_code" ref={roomCodeRef} />
+        </div>
+        <div className="actions">
+          <button
+            data-action="join"
+            className="join-btn"
+            onClick={submitHandler}
+          >
+            Join Game
+          </button>
+          <button
+            data-action="create"
+            className="create-btn"
+            onClick={submitHandler}
+          >
+            Create Game
+          </button>
         </div>
       </form>
     </div>
