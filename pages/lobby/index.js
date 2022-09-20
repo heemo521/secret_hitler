@@ -59,6 +59,15 @@ function Lobby(props) {
     },
   ];
 
+  const createGameHandler = (enteredName) => {
+    console.log('entering a new room as ' + enteredName);
+  };
+
+  const enterGameHandler = ({ enteredName, enteredRoomCode }) => {
+    console.log('entering the room as ' + enteredName);
+    console.log('room code is ', enteredRoomCode);
+  };
+
   // selecting a display game will prefill the game and attempt to submit the form
   // to navigate the user to the game, however if the display name has not been set,
   // then the form will fail and will display warning
@@ -66,7 +75,10 @@ function Lobby(props) {
   return (
     <div>
       {/* will look like a search bar */}
-      <GameForm />
+      <GameForm
+        onCreateGame={createGameHandler}
+        onJoinGame={enterGameHandler}
+      />
       <GameList games={dummyGameData} />
     </div>
   );

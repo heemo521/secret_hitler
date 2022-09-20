@@ -19,7 +19,7 @@ function GameItem({ id, gameType, image, title, description }) {
 GameItem.propTypes = {
   id: PropTypes.number.isRequired,
   gameType: PropTypes.string.isRequired,
-  image: PropTypes.string.isRequired,
+  image: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
 };

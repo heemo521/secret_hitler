@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 // else the user can also input room id to join an existing game
 
 // form components for the new game
-function GameForm({ onEnterGame }) {
+function GameForm({ onCreateGame, onJoinGame }) {
   // user can join a room by typing in the room id
   // or by leaving it blank and selecting join game, which should prompt
   // the user to the lobby (shows open public games) or scheduled games calendar time etc.
@@ -15,42 +15,57 @@ function GameForm({ onEnterGame }) {
 
   function submitHandler(event) {
     event.preventDefault();
-
+    const selectedAction = event.target.dataset.action;
     // name should always be entered for any of the options
     const enteredName = displayNameRef.current.value;
-    // need verification here for the room id if entered
-    const enteredRoomCode = roomCodeRef.current.value || null;
+    const enteredRoomCode = roomCodeRef.current.value;
 
-    if (!enteredName || !enteredRoomCode) {
-      return;
+    if (!enteredName) return console.error('can you enter the name at least?');
+
+    if (selectedAction === 'join') {
+      if (!enteredRoomCode)
+        return console.error('enter the room code to join a game?');
+      return onJoinGame({ enteredName, enteredRoomCode }) && null;
     }
 
-    const gameData = {
-      displayName: enteredName,
-      roomCode: enteredRoomCode,
-    };
-
-    onEnterGame(gameData);
+    onCreateGame(enteredName);
   }
+
   return (
     <div className="card">
-      <form className="form" onSubmit={submitHandler}>
+      <form className="form">
         <div className="control">
           <label htmlFor="name">Display Name</label>
-          <input type="text" required id="name" ref={displayNameRef} />
+          <input type="text" id="name" ref={displayNameRef} />
         </div>
         <div className="control">
           <label htmlFor="room_code">Room Code</label>
-          <input type="text" required id="room_code" ref={roomCodeRef} />
+          <input type="text" id="room_code" ref={roomCodeRef} />
         </div>
         <div className="actions">
-          <button>Join Game</button>
-          <button>Create Game</button>
+          <button
+            data-action="join"
+            className="join-btn"
+            onClick={submitHandler}
+          >
+            Join Game
+          </button>
+          <button
+            data-action="create"
+            className="create-btn"
+            onClick={submitHandler}
+          >
+            Create Game
+          </button>
         </div>
       </form>
     </div>
   );
 }
-GameForm.propTypes = {};
+
+GameForm.propTypes = {
+  onCreateGame: PropTypes.func.isRequired,
+  onJoinGame: PropTypes.func.isRequired,
+};
 
 export default GameForm;
