@@ -6,18 +6,13 @@ import GameForm from '../../components/lobby/GameForm';
 import GameList from '../../components/lobby/GameList';
 import { generateRoomWithoutSeparator } from '../../components/utils/roomNameGenerator';
 
-import { dummyGameData } from './dummyData';
-// import PropTypes from 'prop-types';
+import { dummyGameData } from '../../components/utils/dummyData';
+import PropTypes from 'prop-types';
 
-function Lobby() {
+function Lobby({ lobbyList }) {
   const router = useRouter();
-  const [lobbyList, setLobbyList] = useState();
+  // console.log(props.lobbyList.length
 
-  useEffect(() => {
-    axios('/game-list')
-      .then(({ list }) => setLobbyList(list))
-      .catch((err) => console.error('error fetching game list' + err));
-  });
   const tempRegisteredGameHash = {
     gameMaster: '',
     MyApp: ['player1'],
@@ -110,12 +105,35 @@ function Lobby() {
         onCreateGame={createGameHandler}
         onJoinGame={enterGameHandler}
       />
-      <GameList games={dummyGameData} />
+      {lobbyList ? <GameList games={lobbyList} /> : null}
     </div>
   );
 }
 
-// Lobby.propTypes = {};
+export async function getStaticProps(context) {
+  // used during building process
+  // const list = await axios('/game-list')
+  return {
+    props: {
+      lobbyList: dummyGameData,
+    },
+    revalidate: 1, // data is never older than 10 seconds
+  };
+}
 
-export function getStaticProps() {}
+// export async function getServerSideProps(context) {
+//   const req = context.req;
+//   const res = context.res;
+//   //runs on server after deployment
+//   return {
+//     props: {
+//       lobbyList: dummyGameData,
+//     },
+//   };
+// }
+
+Lobby.propTypes = {
+  lobbyList: PropTypes.array.isRequired,
+};
+
 export default Lobby;
