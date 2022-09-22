@@ -111,7 +111,7 @@ function Lobby({ lobbyList }) {
 }
 
 export async function getStaticProps(context) {
-  // used during building process
+  // used during production build process
   // const list = await axios('/game-list')
   return {
     props: {
