@@ -24,7 +24,23 @@ function Game({ roomCode, isRoomCodeValid }) {
   );
 }
 
-export function getStaticProps(context) {
+export async function getStaticPaths() {
+  return {
+    fallback: true,
+    paths: [
+      {
+        params: {
+          roomCode: 'm1',
+        },
+        params: {
+          roomCode: 'm2',
+        },
+      },
+    ],
+  };
+}
+
+export async function getStaticProps(context) {
   const roomCode = context.params.roomCode;
 
   function verifyRoomCode(roomCode) {
