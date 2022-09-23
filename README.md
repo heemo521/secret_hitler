@@ -1,5 +1,5 @@
 
-# Secret Hitler
+# Secret Hitler v 0.1
 This project is currently in initial development phase. 
 
 ## Learn More
