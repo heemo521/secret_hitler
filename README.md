@@ -8,6 +8,8 @@ If you would like to contribute to this project, you can reach me at https://www
 
 ![Secret Hitler](https://i.imgur.com/GXToKtN.jpg)
 
+![Secret Hitler](https://i.imgur.com/xhbAgBd.jpg)
+
 ## Getting Started
 
 First, install your dependencies,
