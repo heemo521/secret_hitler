@@ -3,7 +3,8 @@
 
 ## Learn More
 
-This is on-going project to build a better platform to play Secret Hitler online with your friends and family!!!
+This project is currently in initial development phase. The mission of this project is to build a best online platform to play Secret Hitler online with your friends and family!!!
+
 If you would like to contribute to this project, you can reach me at https://www.linkedin.com/in/heemo-yang/
 
 ![Secret Hitler](https://i.imgur.com/GXToKtN.jpg)
