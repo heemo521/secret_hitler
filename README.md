@@ -24,10 +24,29 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Tech Stack
-<div align="center" style="color:white">
-  <img width="55" src="https://raw.githubusercontent.com/gilbarbara/logos/master/logos/express.svg"/>
-  <img width="55" src="https://raw.githubusercontent.com/gilbarbara/logos/master/logos/mongodb.svg"/>
-  <img width="55" src="https://raw.githubusercontent.com/gilbarbara/logos/master/logos/nextjs.svg"/>
-  <img width="55" src="https://raw.githubusercontent.com/gilbarbara/logos/master/logos/react.svg"/>
-  <img width="55" src="https://raw.githubusercontent.com/gilbarbara/logos/master/logos/socket.io.svg"/>
+<table>
+  <tr> 
+    <th>React</th>
+    <th>NextJS</th>
+    <th>Express</th>
+    <th>MongoDB</th>
+    <Socket.IO>
+  </tr>
+  <tr>
+    <td>
+      <img width="55" src="https://raw.githubusercontent.com/gilbarbara/logos/master/logos/react.svg"/> 
+    </td>      
+    <td>
+      <img width="55" src="https://raw.githubusercontent.com/gilbarbara/logos/master/logos/nextjs.svg"/>
+    </td>      
+    <td>
+      <img width="55" src="https://raw.githubusercontent.com/gilbarbara/logos/master/logos/express.svg"/>
+    </td>      
+    <td>
+      <img width="55" src="https://raw.githubusercontent.com/gilbarbara/logos/master/logos/mongodb.svg"/>
+    </td>   
+    <td>
+      <img width="55" src="https://raw.githubusercontent.com/gilbarbara/logos/master/logos/socket.io.svg"/>
+    </td>   
+  </tr>
 </div>
