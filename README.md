@@ -1,9 +1,9 @@
 
 # Secret Hitler
+This project is currently in initial development phase. 
 
 ## Learn More
-
-This project is currently in initial development phase. The mission of this project is to build a best online platform to play Secret Hitler online with your friends and family!!!
+The mission of this project is to build a best online platform to play Secret Hitler online with your friends and family!!!
 
 If you would like to contribute to this project, you can reach me at https://www.linkedin.com/in/heemo-yang/
 
@@ -24,7 +24,7 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Tech Stack
-<div align="center" style="backgroundColor:white">
+<div align="center" style="color:white">
   <img width="55" src="https://raw.githubusercontent.com/gilbarbara/logos/master/logos/express.svg"/>
   <img width="55" src="https://raw.githubusercontent.com/gilbarbara/logos/master/logos/mongodb.svg"/>
   <img width="55" src="https://raw.githubusercontent.com/gilbarbara/logos/master/logos/nextjs.svg"/>
