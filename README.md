@@ -30,7 +30,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
     <th>NextJS</th>
     <th>Express</th>
     <th>MongoDB</th>
-    <Socket.IO>
+    <th>Socket.IO</th>
   </tr>
   <tr>
     <td>
