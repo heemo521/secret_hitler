@@ -37,6 +37,17 @@ function Lobby({ lobbyList }) {
     let isValidAndRegistered;
     let tryCount = 0;
 
+    //put this on server and send request with the game master
+
+    async function createNewGameHandler(gameMaster, roomCode) {
+      const response = await axios.post('/api/new-game/', {
+        gameMaster,
+        roomCode,
+      });
+
+      console.log('api response: ', response);
+    }
+
     do {
       roomCode = generateRoomWithoutSeparator();
       //   isValidAndRegistered = await axios('/api/v1/rooms/' + roomCode);
@@ -44,23 +55,25 @@ function Lobby({ lobbyList }) {
       tryCount++;
     } while (!isValidAndRegistered && tryCount < 10);
 
-    console.log(isValidAndRegistered && 'Room is Valid and Registered');
-    console.log('Room Code is ' + roomCode);
-    console.log('We will redirect the user to the game page shortly');
+    createNewGameHandler(enteredName, roomCode);
 
-    const playerRegistrationData = {
-      enteredName,
-      roomCode,
-      gameMaster: true,
-    };
+    // console.log(isValidAndRegistered && 'Room is Valid and Registered');
+    // console.log('Room Code is ' + roomCode);
+    // console.log('We will redirect the user to the game page shortly');
 
-    await registerPlayer(playerRegistrationData);
+    // const playerRegistrationData = {
+    //   enteredName,
+    //   roomCode,
+    //   gameMaster: true,
+    // };
 
-    console.log('Player is registered');
+    // await registerPlayer(playerRegistrationData);
 
-    await setTimeout(() => {
-      router.push('/rooms/' + roomCode);
-    }, 3000);
+    // console.log('Player is registered');
+
+    // await setTimeout(() => {
+    //   router.push('/rooms/' + roomCode);
+    // }, 3000);
   };
 
   const verifyAndRedirect = async (enteredName, roomCode) => {

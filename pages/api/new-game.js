@@ -1,18 +1,41 @@
 import { MongoClient } from 'mongodb';
-import { uri } from '../../components/tempENV';
+// import { uri } from '../../components/tempENV';
 
 // API for creating a new game
 
 async function handler(req, res) {
-  if (req.method === 'POST') {
-    const data = req.body;
+  try {
+    if (req.method === 'POST') {
+      const data = req.body;
 
-    // need the game creator's id
-    const { gameMaster } = data;
+      // need the game creator's id
+      const { gameMaster, roomCode } = data;
 
-    const client = await MongoClient.connect(uri);
-    const db = client.db();
+      console.log(roomCode, gameMaster);
 
-    const gameCollection = db.collection('secret_hitler');
+      const client = await MongoClient.connect(
+        'mongodb+srv://mongo:bongo@cluster0.dlhfrgr.mongodb.net/secret_hitler?retryWrites=true&w=majority'
+      );
+
+      const db = client.db();
+
+      const gameCollection = db.collection('secret_hitler');
+
+      const result = await gameCollection.insertOne({ gameMaster, roomCode });
+
+      client.close();
+
+      console.log(result);
+
+      res.status(201).json({
+        message: 'New game created!',
+      });
+    }
+  } catch (err) {
+    console.log(err);
   }
 }
+
+//TODO: A function to generate random Game name and hash table for active game name
+// list of table names pre generated
+export default handler;
