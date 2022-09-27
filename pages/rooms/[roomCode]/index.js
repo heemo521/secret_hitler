@@ -34,8 +34,10 @@ export async function getStaticPaths() {
   const client = await MongoClient.connect(process.env.MONGO_DB);
   const db = client.db();
   const gameCollection = db.collection('secret_hitler');
-  const games = gameCollection.find({}, { _id: 1 }).toArray();
+  const games = await gameCollection.find({}, { _id: 1 }).toArray();
   client.close();
+
+  console.log(games);
 
   return {
     fallback: true,
@@ -63,9 +65,11 @@ export async function getStaticProps(context) {
   const client = await MongoClient.connect(process.env.MONGO_DB);
   const db = client.db();
   const gameCollection = db.collection('secret_hitler');
-  const selectedGame = await gameCollection.findOne({
-    _id: ObjectId(roomCode),
-  });
+  const selectedGame = await gameCollection
+    .findOne({
+      _id: ObjectId(roomCode),
+    })
+    .toArray();
 
   client.close();
 
@@ -78,7 +82,7 @@ export async function getStaticProps(context) {
   return {
     props: {
       gameData: selectedGame.map((game) => ({
-        id: game._id,
+        id: game._id.toString(),
         player: [],
       })),
     },

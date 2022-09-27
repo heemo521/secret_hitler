@@ -25,7 +25,8 @@ function WaitingRoom({ onStartGame, gameData }) {
         <li>Player5 Name</li>
         <li>Player6 Name</li>
       </ol>
-      {/* TODO: this button should only be visible to the game master <button onClick={onStartGame}></button> */}
+      {/* TODO: this button should only be visible to the game master  */}
+      <button onClick={onStartGame}>Start the game</button>
     </div>
   );
 }
