@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import GameForm from '../../components/lobby/GameForm';
 import GameList from '../../components/lobby/GameList';
-import { generateRoomWithoutSeparator } from '../../components/utils/roomNameGenerator';
 
 import { dummyGameData } from '../../components/utils/dummyData';
 import PropTypes from 'prop-types';
@@ -30,52 +29,6 @@ function Lobby({ lobbyList }) {
     return true;
   };
 
-  const verifyAndRegister = async (enteredName) => {
-    // verify that this room code does not already exist and register it to the server
-    // once that is done, then redirect the user to the game page  do {
-    let roomCode;
-    let isValidAndRegistered;
-    let tryCount = 0;
-
-    //put this on server and send request with the game master
-
-    async function createNewGameHandler(gameMaster, roomCode) {
-      const response = await axios.post('/api/new-game', {
-        gameMaster,
-        roomCode,
-      });
-
-      console.log('api response: ', response);
-    }
-
-    do {
-      roomCode = generateRoomWithoutSeparator();
-      //   isValidAndRegistered = await axios('/api/v1/rooms/' + roomCode);
-      isValidAndRegistered = roomCode in tempRegisteredGameHash;
-      tryCount++;
-    } while (!isValidAndRegistered && tryCount < 10);
-
-    createNewGameHandler(enteredName, roomCode);
-
-    // console.log(isValidAndRegistered && 'Room is Valid and Registered');
-    // console.log('Room Code is ' + roomCode);
-    // console.log('We will redirect the user to the game page shortly');
-
-    // const playerRegistrationData = {
-    //   enteredName,
-    //   roomCode,
-    //   gameMaster: true,
-    // };
-
-    // await registerPlayer(playerRegistrationData);
-
-    // console.log('Player is registered');
-
-    // await setTimeout(() => {
-    //   router.push('/rooms/' + roomCode);
-    // }, 3000);
-  };
-
   const verifyAndRedirect = async (enteredName, roomCode) => {
     const playerRegistrationData = {
       enteredName,
@@ -90,9 +43,19 @@ function Lobby({ lobbyList }) {
     }, 3000);
   };
 
-  const createGameHandler = (enteredName) => {
-    console.log('entering a new room as ' + enteredName);
-    verifyAndRegister(enteredName);
+  const createGameHandler = async (enteredName) => {
+    try {
+      console.log('entering a new room as ' + enteredName);
+      // send requeust to create a game to server with the name provided
+      const res = await axios.post('/api/new-game', { userName: enteredName });
+
+      // use replace so the user can't go back to the lobby page
+      console.log(res);
+      router.replace(`/${res.roomCode}`);
+    } catch (err) {
+      console.log(err);
+      console.log('failed creating Game');
+    }
   };
 
   const enterGameHandler = ({ enteredName, enteredRoomCode }) => {
