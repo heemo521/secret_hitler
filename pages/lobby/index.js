@@ -14,11 +14,6 @@ function Lobby({ games }) {
   const router = useRouter();
   // console.log(props.games.length
 
-  const tempRegisteredGameHash = {
-    gameMaster: '',
-    MyApp: ['player1'],
-  };
-
   const createGameHandler = async (enteredName) => {
     try {
       const res = await axios.post('/api/new-game', { userName: enteredName });
@@ -34,42 +29,35 @@ function Lobby({ games }) {
   };
 
   const joinGameHandler = async ({ enteredName, enteredRoomCode }) => {
-    console.log('entering the room as ' + enteredName);
-    console.log('room code is ', enteredRoomCode);
+    // Call to api route to registerPlayer to a existing room using roomCode
 
-    const playerRegistrationData = {
-      enteredName,
-      roomCode,
-      gameMaster: false,
-    };
+    // selecting a display game will prefill the game and attempt to submit the form
+    // to navigate the user to the game, however if the display name has not been set,
+    // then the form will fail and will display warning
+    try {
+      console.log('entering the room as ' + enteredName);
+      console.log('room code is ', enteredRoomCode);
 
-    await registerPlayer(playerRegistrationData);
+      const playerData = {
+        enteredName,
+        roomCode,
+      };
 
-    // await setTimeout(() => {
-    //   router.push('/rooms/' + roomCode);
-    // }, 3000);
-  };
-  const registerPlayer = async (playerRegistrationData) => {
-    const { enteredName, roomCode, gameMaster } = playerRegistrationData;
-    // player registered
-    if (gameMaster) {
-      tempRegisteredGameHash[gameMaster] = enteredName;
-      tempRegisteredGameHash[roomCode] = tempRegisteredGameHash[roomCode] || [];
+      const res = await axios('/api/joinGame', playerData);
+
+      console.log('join game', res);
+
+      router.replace(`/rooms/${roomCode}`);
+    } catch (error) {
+      console.log(error);
     }
-
-    tempRegisteredGameHash[roomCode].push(enteredName);
-    return true;
   };
-  // selecting a display game will prefill the game and attempt to submit the form
-  // to navigate the user to the game, however if the display name has not been set,
-  // then the form will fail and will display warning
 
   return (
     <div>
       <h2>
         <Link href="/"> Take Me Back Home Please</Link>
       </h2>
-      {/* will look like a search bar */}
 
       <GameForm onCreateGame={createGameHandler} onJoinGame={joinGameHandler} />
       {games ? <GameList games={games} /> : null}
