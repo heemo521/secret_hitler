@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
+import { MongoClient } from 'mongodb';
 import router from 'next/router';
 import WaitingRoom from '../../../components/rooms/WaitingRoom';
 import GameBoard from '../../../components/game/GameBoard';
 import PropTypes from 'prop-types';
 
-function Game({ roomCode, isRoomCodeValid }) {
+function Game({ gameData }) {
+  const { roomCode } = gameData;
   const [startGame, setStartGame] = useState(false);
 
+  const startGameHandler = () => {
+    setStartGame(true);
+  };
   // use localstorage for now to save user data??
 
   if (!roomCode || !isRoomCodeValid) {
@@ -14,7 +19,7 @@ function Game({ roomCode, isRoomCodeValid }) {
   }
 
   if (!startGame) {
-    return <WaitingRoom roomCode={roomCode} />;
+    return <WaitingRoom onStartGame={startGameHandler} roomCode={roomCode} />;
   }
 
   return (
@@ -26,31 +31,41 @@ function Game({ roomCode, isRoomCodeValid }) {
 }
 
 export async function getStaticPaths() {
+  const client = await MongoClient.connect(process.env.MONGO_DB);
+  const db = client.db();
+  const gameCollection = db.collection('secret_hitler');
+  const games = gameCollection.find({}, { _id: 1 }).toArray();
+  client.close();
+
   return {
     fallback: true,
-    paths: [
-      {
-        params: {
-          roomCode: 'm1',
-        },
-        params: {
-          roomCode: 'm2',
-        },
-      },
-    ],
+    paths: games.map((game) => ({
+      params: { roomCode: game._id.toString() },
+    })),
   };
+  // paths: [
+  //   {
+  //     params: {
+  //       roomCode: 'm1',
+  //     },
+  //   },
+  //   {
+  //     params: {
+  //       roomCode: 'm2',
+  //     },
+  //   },
+  // ],
 }
 
 export async function getStaticProps(context) {
   const roomCode = context.params.roomCode;
 
-  function verifyRoomCode(roomCode) {
-    //make sure that this room exists and this player is registered
-    // if not registered then spectator?
-    // axios(roomCode)
+  const client = await MongoClient.connect(process.env.MONGO_DB);
+  const db = client.db();
+  const gameCollection = db.collection('secret_hitler');
+  const selectedGame = await gameCollection.findOne({ _id: roomCode });
 
-    return true;
-  }
+  client.close();
 
   console.log(roomCode);
   const isRoomCodeValid = verifyRoomCode(roomCode);
@@ -60,8 +75,7 @@ export async function getStaticProps(context) {
   // verifyRoomCode(roomCode);
   return {
     props: {
-      roomCode,
-      isRoomCodeValid,
+      gameData: selectedGame,
     },
     revalidate: 1,
   };
