@@ -19,6 +19,36 @@ function Lobby({ games }) {
     MyApp: ['player1'],
   };
 
+  const createGameHandler = async (enteredName) => {
+    try {
+      const res = await axios.post('/api/new-game', { userName: enteredName });
+      //TODO: Update the page with loading spinner or something
+      const { data } = res;
+      const { roomCode } = data;
+
+      router.replace(`/rooms/${roomCode}`);
+    } catch (err) {
+      //TODO: Handle error somehow
+      console.log('failed creating Game');
+    }
+  };
+
+  const joinGameHandler = async ({ enteredName, enteredRoomCode }) => {
+    console.log('entering the room as ' + enteredName);
+    console.log('room code is ', enteredRoomCode);
+
+    const playerRegistrationData = {
+      enteredName,
+      roomCode,
+      gameMaster: false,
+    };
+
+    await registerPlayer(playerRegistrationData);
+
+    // await setTimeout(() => {
+    //   router.push('/rooms/' + roomCode);
+    // }, 3000);
+  };
   const registerPlayer = async (playerRegistrationData) => {
     const { enteredName, roomCode, gameMaster } = playerRegistrationData;
     // player registered
@@ -30,44 +60,6 @@ function Lobby({ games }) {
     tempRegisteredGameHash[roomCode].push(enteredName);
     return true;
   };
-
-  const verifyAndRedirect = async (enteredName, roomCode) => {
-    const playerRegistrationData = {
-      enteredName,
-      roomCode,
-      gameMaster: false,
-    };
-
-    await registerPlayer(playerRegistrationData);
-
-    await setTimeout(() => {
-      router.push('/rooms/' + roomCode);
-    }, 3000);
-  };
-
-  const createGameHandler = async (enteredName) => {
-    try {
-      console.log('entering a new room as ' + enteredName);
-      // send requeust to create a game to server with the name provided
-      const res = await axios.post('/api/new-game', { userName: enteredName });
-      const { data } = res;
-      const { roomCode } = data;
-
-      router.replace(`/rooms/${roomCode}`);
-    } catch (err) {
-      console.log(err);
-      console.log('failed creating Game');
-    }
-  };
-
-  const enterGameHandler = ({ enteredName, enteredRoomCode }) => {
-    console.log('entering the room as ' + enteredName);
-    console.log('room code is ', enteredRoomCode);
-    if (!enteredName || !enteredRoomCode)
-      return console.error('Empty inputs!!!');
-    verifyAndRedirect(enteredName, enteredRoomCode);
-  };
-
   // selecting a display game will prefill the game and attempt to submit the form
   // to navigate the user to the game, however if the display name has not been set,
   // then the form will fail and will display warning
@@ -79,10 +71,7 @@ function Lobby({ games }) {
       </h2>
       {/* will look like a search bar */}
 
-      <GameForm
-        onCreateGame={createGameHandler}
-        onJoinGame={enterGameHandler}
-      />
+      <GameForm onCreateGame={createGameHandler} onJoinGame={joinGameHandler} />
       {games ? <GameList games={games} /> : null}
     </div>
   );
