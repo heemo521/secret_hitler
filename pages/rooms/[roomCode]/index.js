@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import router from 'next/router';
 import WaitingRoom from '../../../components/rooms/WaitingRoom';
 import GameBoard from '../../../components/game/GameBoard';
@@ -19,7 +19,7 @@ function Game({ gameData }) {
   }
 
   if (!startGame) {
-    return <WaitingRoom onStartGame={startGameHandler} roomCode={roomCode} />;
+    return <WaitingRoom onStartGame={startGameHandler} gameData={gameData} />;
   }
 
   return (
@@ -63,19 +63,24 @@ export async function getStaticProps(context) {
   const client = await MongoClient.connect(process.env.MONGO_DB);
   const db = client.db();
   const gameCollection = db.collection('secret_hitler');
-  const selectedGame = await gameCollection.findOne({ _id: roomCode });
+  const selectedGame = await gameCollection.findOne({
+    _id: ObjectId(roomCode),
+  });
 
   client.close();
 
   console.log(roomCode);
-  const isRoomCodeValid = verifyRoomCode(roomCode);
 
   // Make some query to the server to see if the room exists or if the game is already started etc.
   // should I allow spectator mode? Hmm...
   // verifyRoomCode(roomCode);
+
   return {
     props: {
-      gameData: selectedGame,
+      gameData: selectedGame.map((game) => ({
+        id: game._id,
+        player: [],
+      })),
     },
     revalidate: 1,
   };
