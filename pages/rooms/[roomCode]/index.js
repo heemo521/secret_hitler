@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import router from 'next/router';
 import WaitingRoom from '../../../components/rooms/WaitingRoom';
 import GameBoard from '../../../components/game/GameBoard';
 import PropTypes from 'prop-types';

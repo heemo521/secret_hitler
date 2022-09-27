@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { MongoClient } from 'mongodb';
+
 import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import GameForm from '../../components/lobby/GameForm';
 import GameList from '../../components/lobby/GameList';
 
-import { dummyGameData } from '../../components/utils/dummyData';
+// import { dummyGameData } from '../../components/utils/dummyData';
 import PropTypes from 'prop-types';
 
-function Lobby({ lobbyList }) {
+function Lobby({ games }) {
   const router = useRouter();
-  // console.log(props.lobbyList.length
+  // console.log(props.games.length
 
   const tempRegisteredGameHash = {
     gameMaster: '',
@@ -48,10 +50,10 @@ function Lobby({ lobbyList }) {
       console.log('entering a new room as ' + enteredName);
       // send requeust to create a game to server with the name provided
       const res = await axios.post('/api/new-game', { userName: enteredName });
+      const { data } = res;
+      const { roomCode } = data;
 
-      // use replace so the user can't go back to the lobby page
-      console.log(res);
-      router.replace(`/${res.roomCode}`);
+      router.replace(`/rooms/${roomCode}`);
     } catch (err) {
       console.log(err);
       console.log('failed creating Game');
@@ -81,17 +83,37 @@ function Lobby({ lobbyList }) {
         onCreateGame={createGameHandler}
         onJoinGame={enterGameHandler}
       />
-      {lobbyList ? <GameList games={lobbyList} /> : null}
+      {games ? <GameList games={games} /> : null}
     </div>
   );
 }
 
 export async function getStaticProps(context) {
   // used during production build process
-  // const list = await axios('/game-list')
+  // Redundant to fetch to the server
+  // const list = await axios('/api/active-games');
+  const client = await MongoClient.connect(process.env.MONGO_DB);
+  const db = client.db();
+  const gameCollection = db.collection('secret_hitler');
+
+  const games = await gameCollection.find().toArray();
+  client.close();
+
+  // console.log(games);
+
   return {
     props: {
-      lobbyList: dummyGameData,
+      games: [],
+      // games: games.map((game) => ({
+      //   id: game._id.toString(),
+      //   roomCode: game.roomCode,
+      //   player: game.userName,
+      //   image: game.image,
+      //   description: game.description,
+      //   //TODO: createa a schema and later get the number of players registered here
+
+      //   // players: game.players.length,
+      // })),
     },
     revalidate: 1, // data is never older than 10 seconds
   };
@@ -109,7 +131,7 @@ export async function getStaticProps(context) {
 // }
 
 Lobby.propTypes = {
-  lobbyList: PropTypes.array.isRequired,
+  games: PropTypes.array.isRequired,
 };
 
 export default Lobby;
