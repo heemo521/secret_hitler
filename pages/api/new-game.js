@@ -13,9 +13,7 @@ async function handler(req, res) {
 
       console.log(roomCode, gameMaster);
 
-      const client = await MongoClient.connect(
-        'mongodb+srv://mongo:bongo@cluster0.dlhfrgr.mongodb.net/secret_hitler?retryWrites=true&w=majority'
-      );
+      const client = await MongoClient.connect(process.env.MONGODB);
 
       const db = client.db();
 

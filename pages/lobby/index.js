@@ -40,7 +40,7 @@ function Lobby({ lobbyList }) {
     //put this on server and send request with the game master
 
     async function createNewGameHandler(gameMaster, roomCode) {
-      const response = await axios.post('/api/new-game/', {
+      const response = await axios.post('/api/new-game', {
         gameMaster,
         roomCode,
       });
