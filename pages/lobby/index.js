@@ -1,121 +1,105 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import Head from 'next/head';
+import { MongoClient } from 'mongodb';
+
 import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import GameForm from '../../components/lobby/GameForm';
 import GameList from '../../components/lobby/GameList';
-import { generateRoomWithoutSeparator } from '../../components/utils/roomNameGenerator';
 
-import { dummyGameData } from '../../components/utils/dummyData';
+// import { dummyGameData } from '../../components/utils/dummyData';
 import PropTypes from 'prop-types';
 
-function Lobby({ lobbyList }) {
+function Lobby({ games }) {
   const router = useRouter();
-  // console.log(props.lobbyList.length
+  // console.log(props.games.length
 
-  const tempRegisteredGameHash = {
-    gameMaster: '',
-    MyApp: ['player1'],
-  };
+  const createGameHandler = async (enteredName) => {
+    try {
+      const res = await axios.post('/api/new-game', { userName: enteredName });
+      //TODO: Update the page with loading spinner or something
+      const { data } = res;
+      const { roomCode } = data;
 
-  const registerPlayer = async (playerRegistrationData) => {
-    const { enteredName, roomCode, gameMaster } = playerRegistrationData;
-    // player registered
-    if (gameMaster) {
-      tempRegisteredGameHash[gameMaster] = enteredName;
-      tempRegisteredGameHash[roomCode] = tempRegisteredGameHash[roomCode] || [];
+      router.replace(`/rooms/${roomCode}`);
+    } catch (err) {
+      //TODO: Handle error somehow
+      console.log('failed creating Game');
     }
-
-    tempRegisteredGameHash[roomCode].push(enteredName);
-    return true;
   };
 
-  const verifyAndRegister = async (enteredName) => {
-    // verify that this room code does not already exist and register it to the server
-    // once that is done, then redirect the user to the game page  do {
-    let roomCode;
-    let isValidAndRegistered;
-    let tryCount = 0;
+  const joinGameHandler = async ({ enteredName, enteredRoomCode }) => {
+    // Call to api route to registerPlayer to a existing room using roomCode
 
-    do {
-      roomCode = generateRoomWithoutSeparator();
-      //   isValidAndRegistered = await axios('/api/v1/rooms/' + roomCode);
-      isValidAndRegistered = roomCode in tempRegisteredGameHash;
-      tryCount++;
-    } while (!isValidAndRegistered && tryCount < 10);
+    // selecting a display game will prefill the game and attempt to submit the form
+    // to navigate the user to the game, however if the display name has not been set,
+    // then the form will fail and will display warning
+    try {
+      console.log('entering the room as ' + enteredName);
+      console.log('room code is ', enteredRoomCode);
 
-    console.log(isValidAndRegistered && 'Room is Valid and Registered');
-    console.log('Room Code is ' + roomCode);
-    console.log('We will redirect the user to the game page shortly');
+      const playerData = {
+        enteredName,
+        roomCode,
+      };
 
-    const playerRegistrationData = {
-      enteredName,
-      roomCode,
-      gameMaster: true,
-    };
+      const res = await axios('/api/joinGame', playerData);
 
-    await registerPlayer(playerRegistrationData);
+      console.log('join game', res);
 
-    console.log('Player is registered');
-
-    await setTimeout(() => {
-      router.push('/rooms/' + roomCode);
-    }, 3000);
+      router.replace(`/rooms/${roomCode}`);
+    } catch (error) {
+      console.log(error);
+    }
   };
-
-  const verifyAndRedirect = async (enteredName, roomCode) => {
-    const playerRegistrationData = {
-      enteredName,
-      roomCode,
-      gameMaster: false,
-    };
-
-    await registerPlayer(playerRegistrationData);
-
-    await setTimeout(() => {
-      router.push('/rooms/' + roomCode);
-    }, 3000);
-  };
-
-  const createGameHandler = (enteredName) => {
-    console.log('entering a new room as ' + enteredName);
-    verifyAndRegister(enteredName);
-  };
-
-  const enterGameHandler = ({ enteredName, enteredRoomCode }) => {
-    console.log('entering the room as ' + enteredName);
-    console.log('room code is ', enteredRoomCode);
-    if (!enteredName || !enteredRoomCode)
-      return console.error('Empty inputs!!!');
-    verifyAndRedirect(enteredName, enteredRoomCode);
-  };
-
-  // selecting a display game will prefill the game and attempt to submit the form
-  // to navigate the user to the game, however if the display name has not been set,
-  // then the form will fail and will display warning
 
   return (
-    <div>
-      <h2>
-        <Link href="/"> Take Me Back Home Please</Link>
-      </h2>
-      {/* will look like a search bar */}
+    <>
+      <Head>
+        <title>Secret Hitler Game Lobby</title>
+      </Head>
+      <div>
+        <h2>
+          <Link href="/">Take Me Back Home Please</Link>
+        </h2>
 
-      <GameForm
-        onCreateGame={createGameHandler}
-        onJoinGame={enterGameHandler}
-      />
-      {lobbyList ? <GameList games={lobbyList} /> : null}
-    </div>
+        <GameForm
+          onCreateGame={createGameHandler}
+          onJoinGame={joinGameHandler}
+        />
+        {games ? <GameList games={games} /> : null}
+      </div>
+    </>
   );
 }
 
 export async function getStaticProps(context) {
   // used during production build process
-  // const list = await axios('/game-list')
+  // Redundant to fetch to the server
+  // const list = await axios('/api/active-games');
+  const client = await MongoClient.connect(process.env.MONGO_DB);
+  const db = client.db();
+  const gameCollection = db.collection('secret_hitler');
+
+  const games = await gameCollection.find().toArray();
+  client.close();
+
+  // console.log(games);
+
   return {
     props: {
-      lobbyList: dummyGameData,
+      games: [],
+      // games: games.map((game) => ({
+      //   id: game._id.toString(),
+      //   roomCode: game.roomCode,
+      //   player: game.userName,
+      //   image: game.image,
+      //   description: game.description,
+      //   //TODO: createa a schema and later get the number of players registered here
+
+      //   // players: game.players.length,
+      // })),
     },
     revalidate: 1, // data is never older than 10 seconds
   };
@@ -133,7 +117,7 @@ export async function getStaticProps(context) {
 // }
 
 Lobby.propTypes = {
-  lobbyList: PropTypes.array.isRequired,
+  games: PropTypes.array.isRequired,
 };
 
 export default Lobby;
