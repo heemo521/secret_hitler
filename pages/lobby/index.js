@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import Head from 'next/head';
 import { MongoClient } from 'mongodb';
 
 import axios from 'axios';
@@ -54,14 +55,22 @@ function Lobby({ games }) {
   };
 
   return (
-    <div>
-      <h2>
-        <Link href="/"> Take Me Back Home Please</Link>
-      </h2>
+    <>
+      <Head>
+        <title>Secret Hitler Game Lobby</title>
+      </Head>
+      <div>
+        <h2>
+          <Link href="/">Take Me Back Home Please</Link>
+        </h2>
 
-      <GameForm onCreateGame={createGameHandler} onJoinGame={joinGameHandler} />
-      {games ? <GameList games={games} /> : null}
-    </div>
+        <GameForm
+          onCreateGame={createGameHandler}
+          onJoinGame={joinGameHandler}
+        />
+        {games ? <GameList games={games} /> : null}
+      </div>
+    </>
   );
 }
 
