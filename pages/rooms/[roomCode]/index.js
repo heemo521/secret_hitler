@@ -1,17 +1,11 @@
 import React, { useState } from 'react';
-import { MongoClient, ObjectId } from 'mongodb';
-import router from 'next/router';
 import WaitingRoom from '../../../components/rooms/WaitingRoom';
 import GameBoard from '../../../components/game/GameBoard';
 import PropTypes from 'prop-types';
 
-function Game({ gameData }) {
-  const { roomCode } = gameData;
+function Game({ roomCode, isRoomCodeValid }) {
   const [startGame, setStartGame] = useState(false);
 
-  const startGameHandler = () => {
-    setStartGame(true);
-  };
   // use localstorage for now to save user data??
 
   if (!roomCode || !isRoomCodeValid) {
@@ -19,72 +13,54 @@ function Game({ gameData }) {
   }
 
   if (!startGame) {
-    return <WaitingRoom onStartGame={startGameHandler} gameData={gameData} />;
+    return <WaitingRoom roomCode={roomCode} />;
   }
 
   return (
     <div>
       <h1>Game Board</h1>
-      <GameBoard gameData={gameData} />
+      <GameBoard />
     </div>
   );
 }
 
 export async function getStaticPaths() {
-  const client = await MongoClient.connect(process.env.MONGO_DB);
-  const db = client.db();
-  const gameCollection = db.collection('secret_hitler');
-  const games = await gameCollection.find({}, { _id: 1 }).toArray();
-  client.close();
-
-  console.log(games);
-
   return {
     fallback: true,
-    paths: games.map((game) => ({
-      params: { roomCode: game._id.toString() },
-    })),
+    paths: [
+      {
+        params: {
+          roomCode: 'm1',
+        },
+        params: {
+          roomCode: 'm2',
+        },
+      },
+    ],
   };
-  // paths: [
-  //   {
-  //     params: {
-  //       roomCode: 'm1',
-  //     },
-  //   },
-  //   {
-  //     params: {
-  //       roomCode: 'm2',
-  //     },
-  //   },
-  // ],
 }
 
 export async function getStaticProps(context) {
   const roomCode = context.params.roomCode;
 
-  const client = await MongoClient.connect(process.env.MONGO_DB);
-  const db = client.db();
-  const gameCollection = db.collection('secret_hitler');
-  const selectedGame = await gameCollection
-    .findOne({
-      _id: ObjectId(roomCode),
-    })
-    .toArray();
+  function verifyRoomCode(roomCode) {
+    //make sure that this room exists and this player is registered
+    // if not registered then spectator?
+    // axios(roomCode)
 
-  client.close();
+    return true;
+  }
 
   console.log(roomCode);
+  const isRoomCodeValid = verifyRoomCode(roomCode);
 
   // Make some query to the server to see if the room exists or if the game is already started etc.
   // should I allow spectator mode? Hmm...
   // verifyRoomCode(roomCode);
-
   return {
     props: {
-      gameData: selectedGame.map((game) => ({
-        id: game._id.toString(),
-        player: [],
-      })),
+      roomCode,
+      isRoomCodeValid,
     },
     revalidate: 1,
   };

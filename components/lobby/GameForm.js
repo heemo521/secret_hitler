@@ -26,8 +26,7 @@ function GameForm({ onCreateGame, onJoinGame }) {
       if (!enteredRoomCode)
         return console.error('can you enter the name at least?');
 
-      onJoinGame({ enteredName, enteredRoomCode });
-      return;
+      return onJoinGame({ enteredName, enteredRoomCode }) && null;
     }
 
     onCreateGame(enteredName);

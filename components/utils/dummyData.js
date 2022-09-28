@@ -1,3 +1,4 @@
+import SecretOne from '../../public/secret1.jpg';
 import SecretTwo from '../../public/secret2.jpg';
 
 const players = [
@@ -30,7 +31,7 @@ export const dummyGameData = [
 
     description: lorem, //description of the game if any
     players: players,
-    image: SecretTwo,
+    image: SecretOne,
     maxPlayers: 10, //min 5 players and max 10 players
   },
   {
@@ -39,7 +40,7 @@ export const dummyGameData = [
     title: 'dummy2', //title of the game
     description: lorem, //description of the game if any
     players: players,
-    image: SecretTwo,
+    image: SecretOne,
     maxPlayers: 8,
   },
   {
