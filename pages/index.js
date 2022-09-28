@@ -1,4 +1,5 @@
 import React from 'react';
+
 import Link from 'next/link';
 import HowToPlay from '../components/home/HowToPlay';
 

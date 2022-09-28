@@ -25,7 +25,7 @@ function Game({ gameData }) {
   return (
     <div>
       <h1>Game Board</h1>
-      <GameBoard />
+      <GameBoard gameData={gameData} />
     </div>
   );
 }
