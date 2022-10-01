@@ -31,7 +31,7 @@ function WaitingRoom({ onStartGame, gameData }) {
         })}
       </ol>
       {/* TODO: this button should only be visible to the game master  */}
-      <button disabled={players.length >= 5} onClick={onStartGame}>
+      <button disabled={players.length < 5} onClick={onStartGame}>
         Start the game
       </button>
     </div>
