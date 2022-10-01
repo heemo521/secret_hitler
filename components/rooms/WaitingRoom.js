@@ -22,6 +22,7 @@ function WaitingRoom({ onStartGame, gameData }) {
       {/* Waiting for the game master to start the game... (if at least 5) */}
       <ol>
         {players.map((player) => {
+          console.log(player);
           return (
             <li key={player.id}>
               <p>{player.name}</p>

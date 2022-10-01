@@ -20,7 +20,7 @@ function GameForm({ onCreateGame, onJoinGame }) {
     e.preventDefault();
     onCreateGame({ enteredName: name });
   };
-  const joinHandler = () => {
+  const joinHandler = (e) => {
     e.preventDefault();
     onJoinGame({ enteredName: name, enteredRoomCode: roomId });
   };

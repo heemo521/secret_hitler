@@ -43,13 +43,6 @@ function Lobby({ games }) {
 
   const createGameHandler = async ({ enteredName }) => {
     try {
-      //create a new game with the enteredName as the host
-      //then we get back the respond and get the roomCode from the server
-      // Once we do, we know that the room is created and we can redirect the
-      // user to the room that was created
-
-      console.log(enteredName);
-
       const res = await axios.post('/api/newGame', { host: enteredName });
       const { data } = res;
       const { roomCode } = data;
@@ -61,25 +54,15 @@ function Lobby({ games }) {
   };
 
   const joinGameHandler = async ({ enteredName, enteredRoomCode }) => {
-    // Call to api route to registerPlayer to a existing room using roomCode
-
-    // selecting a display game will prefill the game and attempt to submit the form
-    // to navigate the user to the game, however if the display name has not been set,
-    // then the form will fail and will display warning
     try {
-      console.log('entering the room as ' + enteredName);
-      console.log('room code is ', enteredRoomCode);
-
-      const playerData = {
-        enteredName,
-        roomCode,
-      };
-
-      const res = await axios('/api/joinGame', playerData);
+      const res = await axios.post('/api/joinGame', {
+        roomCode: enteredRoomCode,
+        newPlayer: enteredName,
+      });
 
       console.log('join game', res);
 
-      router.replace(`/rooms/${roomCode}`);
+      // router.replace(`/rooms/${roomCode}`);
     } catch (error) {
       console.log(error);
     }

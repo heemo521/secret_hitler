@@ -1,7 +1,9 @@
 import { MongoClient } from 'mongodb';
 
-async function Handler(req, res) {
+async function handler(req, res) {
   try {
+    if (req.method !== 'POST') throw new Error('POST request only');
+
     const data = req.body.data;
     console.log(data);
 
@@ -18,10 +20,13 @@ async function Handler(req, res) {
     });
   } catch (error) {
     //either the roomcode was not found or some other error
-    console.log(error);
+    console.log(error.message);
+
     res.status(404).json({
       message:
         'The room code provided does not exists. Please double check your room code and try again.',
     });
   }
 }
+
+export default handler;
