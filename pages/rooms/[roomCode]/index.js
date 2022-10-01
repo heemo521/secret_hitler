@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MongoClient, ObjectId } from 'mongodb';
 import WaitingRoom from '../../../components/rooms/WaitingRoom';
 import GameBoard from '../../../components/game/GameBoard';
@@ -8,14 +8,21 @@ import PropTypes from 'prop-types';
 function Game({ gameData, isValidGame }) {
   const [startGame, setStartGame] = useState(false);
 
+  useEffect(() => {
+    console.log(gameData.inProgress);
+    setStartGame(gameData.inProgress);
+  }, [gameData.inProgress]);
+
   //Room does not exist should redirect the user to the lobby room
   if (!isValidGame) {
     return <h1>this room does not exist fool!!!</h1>;
   }
 
   const startGameHandler = async () => {
-    //we need to update the inProgress to true so that
-    //we can start the game for all the players
+    // we need to update the inProgress to true so that
+    // we can start the game for all the players
+    // change the api
+
     const res = await axios.patch('/api/startGame', {
       roomCode: gameData.roomCode,
     });
@@ -69,6 +76,8 @@ export async function getStaticProps(context) {
         roomCode: selectedGame._id.toString(),
         host: selectedGame.host,
         players: selectedGame.players,
+        numOfCompletedRounds: selectedGame.numOfCompletedRounds,
+        inProgress: selectedGame.inProgress || false,
       },
     },
     revalidate: 1,

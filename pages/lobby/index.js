@@ -57,7 +57,7 @@ function Lobby({ games }) {
 
   const joinGameHandler = async ({ enteredName, enteredRoomCode }) => {
     try {
-      const res = await axios.post('/api/joinGame', {
+      const res = await axios.patch('/api/joinGame', {
         roomCode: enteredRoomCode,
         newPlayer: enteredName,
       });

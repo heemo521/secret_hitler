@@ -13,6 +13,8 @@ async function handler(req, res) {
     const gameCollection = db.collection('secret_hitler');
 
     //TODO: Make sure that there is no duplicate named player
+    //TODO: Make sure the game is not in play (inProgress should be false)
+
     console.log(roomCode);
     const updatedCollection = await gameCollection.updateOne(
       { _id: ObjectId(roomCode) },
@@ -32,6 +34,7 @@ async function handler(req, res) {
       message: 'Player added successfully',
     });
   } catch (err) {
+    console.log(err.message);
     res.status(404).json({
       message: err.message,
     });
