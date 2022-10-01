@@ -8,14 +8,19 @@ async function handler(req, res) {
       const { host } = data;
       const roomName = generateRoomWithoutSeparator();
 
+      //TODO: Have one connection for all the requests
       const client = await MongoClient.connect(process.env.MONGO_DB);
       const db = client.db();
       const gameCollection = db.collection('secret_hitler');
 
+      //TODO: Make sure there is no players with same name
+
       const result = await gameCollection.insertOne({
         roomName,
         host,
-        players: [host],
+        players: [{ id: generateRoomWithoutSeparator(), name: host }],
+        numOfCompletedRounds: 0,
+        inProgress: false,
       });
 
       client.close();
@@ -24,9 +29,13 @@ async function handler(req, res) {
         message: 'New game created!',
         roomCode: result.insertedId.toString(),
       });
+    } else {
+      throw new Error('Method not supported');
     }
   } catch (err) {
-    console.log(err);
+    res.status(404).json({
+      message: err.message,
+    });
   }
 }
 

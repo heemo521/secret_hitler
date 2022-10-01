@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 // creates a new game with the given display name
@@ -6,32 +6,24 @@ import PropTypes from 'prop-types';
 
 // form components for the new game
 function GameForm({ onCreateGame, onJoinGame }) {
-  // user can join a room by typing in the room id
-  // or by leaving it blank and selecting join game, which should prompt
-  // the user to the lobby (shows open public games) or scheduled games calendar time etc.
+  const [name, setName] = useState('');
+  const [roomId, setRoomId] = useState('');
 
-  const displayNameRef = useRef();
-  const roomCodeRef = useRef();
+  const nameHandler = (e) => {
+    setName(e.target.value);
+  };
+  const roomIdHandler = (e) => {
+    setRoomId(e.target.value);
+  };
 
-  function submitHandler(event) {
-    event.preventDefault();
-    const selectedAction = event.target.dataset.action;
-    // name should always be entered for any of the options
-    const enteredName = displayNameRef.current.value;
-    const enteredRoomCode = roomCodeRef.current.value;
-
-    if (!enteredName) return console.error('can you enter the name at least?');
-
-    if (selectedAction === 'join') {
-      if (!enteredRoomCode)
-        return console.error('can you enter the name at least?');
-
-      onJoinGame({ enteredName, enteredRoomCode });
-      return;
-    }
-
-    onCreateGame(enteredName);
-  }
+  const createHandler = (e) => {
+    e.preventDefault();
+    onCreateGame({ enteredName: name });
+  };
+  const joinHandler = (e) => {
+    e.preventDefault();
+    onJoinGame({ enteredName: name, enteredRoomCode: roomId });
+  };
 
   return (
     <div className="card">
@@ -46,24 +38,31 @@ function GameForm({ onCreateGame, onJoinGame }) {
       <form className="form">
         <div className="control">
           <label htmlFor="name">Display Name</label>
-          <input type="text" id="name" ref={displayNameRef} />
+          <input type="text" id="name" value={name} onChange={nameHandler} />
         </div>
         <div className="control">
           <label htmlFor="room_code">Room Code</label>
-          <input type="text" id="room_code" ref={roomCodeRef} />
+          <input
+            type="text"
+            id="room_code"
+            value={roomId}
+            onChange={roomIdHandler}
+          />
         </div>
         <div className="actions">
           <button
             data-action="join"
             className="join-btn"
-            onClick={submitHandler}
+            disabled={name.length === 0 || roomId.length === 0}
+            onClick={joinHandler}
           >
             Join Game
           </button>
           <button
             data-action="create"
             className="create-btn"
-            onClick={submitHandler}
+            onClick={createHandler}
+            disabled={name.length === 0}
           >
             Create Game
           </button>

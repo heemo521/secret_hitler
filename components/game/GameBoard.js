@@ -3,6 +3,7 @@ import HowToPlay from '../home/HowToPlay';
 import PropTypes from 'prop-types';
 
 function GameBoard({ gameData }) {
+  console.log(gameData);
   // const [toggleModal, setToggleModal] = useState(false);
   // if (toggleModal) {
   //   // TODO: open it as a modal
