@@ -99,7 +99,7 @@ export async function getStaticProps(context) {
   const games = await gameCollection.find().toArray();
   client.close();
 
-  // console.log(games);
+  console.log(games);
 
   return {
     props: {

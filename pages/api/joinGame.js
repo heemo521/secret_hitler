@@ -1,30 +1,43 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 
 async function handler(req, res) {
   try {
     if (req.method !== 'POST') throw new Error('POST request only');
 
-    const data = req.body.data;
-    console.log(data);
+    const data = req.body;
+    const { roomCode, newPlayer } = data;
+    console.log(roomCode, newPlayer);
 
     const client = await MongoClient.connect(process.env.MONGO_DB);
+    const db = client.db();
+    const gameCollection = db.collection('secret_hitler');
 
-    //TODO: STEP 1: Here we need to verify the room code exists in the database, the game is still in the pending
-    //   status before we can let the player join the room. If the room does not exist, throw an error and
+    const updatedCollection = await gameCollection.updateOne(
+      { _id: ObjectId(roomCode) },
+      { $push: { players: newPlayer } }
+    );
+    const addedCollection = await gameCollection
+      .find({
+        _id: ObjectId(roomCode),
+      })
+      .toArray();
 
-    // STEP 2:
+    console.log(updatedCollection.matchedCount === 0);
+
+    client.close();
+
+    if (updatedCollection.matchedCount === 0)
+      throw new Error('The room code provided does not exists.');
 
     res.status(201).json({
-      message: 'Here is your game data!',
-      playerRegistered,
+      message: 'Player added successfully',
     });
   } catch (error) {
     //either the roomcode was not found or some other error
     console.log(error.message);
 
     res.status(404).json({
-      message:
-        'The room code provided does not exists. Please double check your room code and try again.',
+      message: error.message,
     });
   }
 }
