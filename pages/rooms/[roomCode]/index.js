@@ -4,7 +4,7 @@ import router from 'next/router';
 import WaitingRoom from '../../../components/rooms/WaitingRoom';
 import GameBoard from '../../../components/game/GameBoard';
 import PropTypes from 'prop-types';
-import { Axios } from 'axios';
+import axios from 'axios';
 
 function Game({ gameData, isValidGame }) {
   const [startGame, setStartGame] = useState(false);
@@ -14,12 +14,14 @@ function Game({ gameData, isValidGame }) {
     return <h1>this room does not exist fool!!!</h1>;
   }
 
-  const startGameHandler = () => {
+  const startGameHandler = async () => {
     //we need to update the inProgress to true so that
     //we can start the game for all the players
-    Axios.patch();
-
-    setStartGame(true);
+    const res = await axios.patch('/api/startGame', {
+      roomCode: gameData.roomCode,
+    });
+    console.log(res);
+    // if (res.status === 'success') setStartGame(true);
   };
 
   if (!startGame) {

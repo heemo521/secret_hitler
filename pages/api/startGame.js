@@ -1,25 +1,23 @@
 import { MongoClient, ObjectId } from 'mongodb';
-import { generateRoomWithoutSeparator } from '../../components/utils/roomNameGenerator';
+// start the game by changing the inProgress to true and it should
+// turn back to false once the game is finished
 
 async function handler(req, res) {
   try {
     if (req.method !== 'PATCH') throw new Error('Method not supported');
 
     const data = req.body;
-    const { roomCode, newPlayer } = data;
+    const { roomCode } = data;
 
     const client = await MongoClient.connect(process.env.MONGO_DB);
     const db = client.db();
     const gameCollection = db.collection('secret_hitler');
 
-    //TODO: Make sure that there is no duplicate named player
     console.log(roomCode);
     const updatedCollection = await gameCollection.updateOne(
       { _id: ObjectId(roomCode) },
       {
-        $push: {
-          players: { id: generateRoomWithoutSeparator(), name: newPlayer },
-        },
+        $set: { inProgress: true },
       }
     );
 
@@ -29,7 +27,7 @@ async function handler(req, res) {
       throw new Error('The room code provided does not exists.');
 
     res.status(201).json({
-      message: 'Player added successfully',
+      message: 'Game is starting!!!',
     });
   } catch (err) {
     res.status(404).json({
