@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { MongoClient, ObjectId } from 'mongodb';
-import router from 'next/router';
 import WaitingRoom from '../../../components/rooms/WaitingRoom';
 import GameBoard from '../../../components/game/GameBoard';
-import PropTypes from 'prop-types';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 
 function Game({ gameData, isValidGame }) {
   const [startGame, setStartGame] = useState(false);
@@ -21,7 +20,7 @@ function Game({ gameData, isValidGame }) {
       roomCode: gameData.roomCode,
     });
     console.log(res);
-    // if (res.status === 'success') setStartGame(true);
+    if (res.status === 201) setStartGame(true);
   };
 
   if (!startGame) {
