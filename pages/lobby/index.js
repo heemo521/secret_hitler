@@ -41,12 +41,14 @@ function Lobby({ games }) {
   //   );
   // };
 
-  const createGameHandler = async (enteredName) => {
+  const createGameHandler = async ({ enteredName }) => {
     try {
       //create a new game with the enteredName as the host
       //then we get back the respond and get the roomCode from the server
       // Once we do, we know that the room is created and we can redirect the
       // user to the room that was created
+
+      console.log(enteredName);
 
       const res = await axios.post('/api/newGame', { host: enteredName });
       const { data } = res;
