@@ -66,7 +66,7 @@ export async function getStaticProps(context) {
   const db = client.db();
   const gameCollection = db.collection('secret_hitler');
   const selectedGame = await gameCollection
-    .findOne({
+    .find({
       _id: ObjectId(roomCode),
     })
     .toArray();

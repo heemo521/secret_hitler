@@ -10,6 +10,7 @@ function WaitingRoom({ onStartGame, gameData }) {
     /* copy function here for users to invite with code*/
     // get players with room code and pull player information
     // from the local storage for now
+    // connection to socket should update the list of players for this roomcode
   }
 
   return (
@@ -23,7 +24,6 @@ function WaitingRoom({ onStartGame, gameData }) {
         <li>Player3 Name</li>
         <li>Player4 Name</li>
         <li>Player5 Name</li>
-        <li>Player6 Name</li>
       </ol>
       {/* TODO: this button should only be visible to the game master  */}
       <button onClick={onStartGame}>Start the game</button>
