@@ -1,4 +1,5 @@
 import { MongoClient, ObjectId } from 'mongodb';
+import { generateRoomWithoutSeparator } from '../../components/utils/roomNameGenerator';
 
 async function handler(req, res) {
   try {
@@ -6,23 +7,21 @@ async function handler(req, res) {
 
     const data = req.body;
     const { roomCode, newPlayer } = data;
-    console.log(roomCode, newPlayer);
 
     const client = await MongoClient.connect(process.env.MONGO_DB);
     const db = client.db();
     const gameCollection = db.collection('secret_hitler');
 
+    //TODO: Make sure that there is no duplicate named player
+    console.log(roomCode);
     const updatedCollection = await gameCollection.updateOne(
       { _id: ObjectId(roomCode) },
-      { $push: { players: newPlayer } }
+      {
+        $push: {
+          players: { id: generateRoomWithoutSeparator(), name: newPlayer },
+        },
+      }
     );
-    const addedCollection = await gameCollection
-      .find({
-        _id: ObjectId(roomCode),
-      })
-      .toArray();
-
-    console.log(updatedCollection.matchedCount === 0);
 
     client.close();
 
@@ -33,7 +32,6 @@ async function handler(req, res) {
       message: 'Player added successfully',
     });
   } catch (error) {
-    //either the roomcode was not found or some other error
     console.log(error.message);
 
     res.status(404).json({

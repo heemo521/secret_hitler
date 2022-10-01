@@ -43,6 +43,8 @@ function Lobby({ games }) {
 
   const createGameHandler = async ({ enteredName }) => {
     try {
+      //FIXME: Prevent double click...
+
       const res = await axios.post('/api/newGame', { host: enteredName });
       const { data } = res;
       const { roomCode } = data;
@@ -60,9 +62,7 @@ function Lobby({ games }) {
         newPlayer: enteredName,
       });
 
-      console.log('join game', res);
-
-      // router.replace(`/rooms/${roomCode}`);
+      router.replace(`/rooms/${enteredRoomCode}`);
     } catch (error) {
       console.log(error);
     }
