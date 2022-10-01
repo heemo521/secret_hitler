@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { MongoClient } from 'mongodb';
-
+import io from 'socket.io-client';
 import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -11,20 +11,49 @@ import GameList from '../../components/lobby/GameList';
 // import { dummyGameData } from '../../components/utils/dummyData';
 import PropTypes from 'prop-types';
 
+let socket;
+
 function Lobby({ games }) {
   const router = useRouter();
   // console.log(props.games.length
+  const [userName, setUserName] = useState('');
+  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState([]);
+
+  // useEffect(() => {
+  //   socketInitializer();
+  // }, []);
+
+  // const socketInitializer = async () => {
+  //   // call the server so that the socket server will be up and running
+  //   await axios('/api/socket');
+
+  //   socket = io();
+
+  //   socket.on('newMessage', (message) =>
+  //     setMessages((messages) => [
+  //       ...messages,
+  //       {
+  //         author: message.author,
+  //         message: message.message,
+  //       },
+  //     ])
+  //   );
+  // };
 
   const createGameHandler = async (enteredName) => {
     try {
-      const res = await axios.post('/api/new-game', { userName: enteredName });
-      //TODO: Update the page with loading spinner or something
+      //create a new game with the enteredName as the host
+      //then we get back the respond and get the roomCode from the server
+      // Once we do, we know that the room is created and we can redirect the
+      // user to the room that was created
+
+      const res = await axios.post('/api/newGame', { host: enteredName });
       const { data } = res;
       const { roomCode } = data;
 
       router.replace(`/rooms/${roomCode}`);
     } catch (err) {
-      //TODO: Handle error somehow
       console.log('failed creating Game');
     }
   };
