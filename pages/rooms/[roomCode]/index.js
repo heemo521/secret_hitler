@@ -5,6 +5,8 @@ import GameBoard from '../../../components/game/GameBoard';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 
+//TODO: Implement chat here so that player scan see start chatting as soon as they enter the waiting room
+
 function Game({ gameData, isValidGame }) {
   const [startGame, setStartGame] = useState(false);
 
@@ -19,14 +21,9 @@ function Game({ gameData, isValidGame }) {
   }
 
   const startGameHandler = async () => {
-    // we need to update the inProgress to true so that
-    // we can start the game for all the players
-    // change the api
-
     const res = await axios.patch('/api/startGame', {
       roomCode: gameData.roomCode,
     });
-    console.log(res);
     if (res.status === 201) setStartGame(true);
   };
 

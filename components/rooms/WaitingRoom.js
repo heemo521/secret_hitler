@@ -19,7 +19,6 @@ function WaitingRoom({ onStartGame, gameData }) {
 
       <ol>
         {players.map((player) => {
-          console.log(player);
           return (
             <li key={player.id}>
               <p>{player.name}</p>
