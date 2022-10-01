@@ -16,19 +16,13 @@ function Game({ gameData, isValidGame }) {
   const startGameHandler = () => {
     setStartGame(true);
   };
-  // Players are in the game lobby until the game is started and there is at least 5 players
-  // The game will automatically be started if there are 10 players (maximum players allowed)
 
   if (!startGame) {
     return <WaitingRoom onStartGame={startGameHandler} gameData={gameData} />;
   }
 
-  return (
-    <div>
-      <h1>Game Board</h1>
-      <GameBoard gameData={gameData} />
-    </div>
-  );
+  //When Game Starts, We'll redirect the users to the game room
+  return <GameBoard gameData={gameData} />;
 }
 
 export async function getStaticPaths() {
