@@ -35,7 +35,9 @@ export async function getStaticPaths() {
   const client = await MongoClient.connect(process.env.MONGO_DB);
   const db = client.db();
   const gameCollection = db.collection('secret_hitler');
+
   const games = await gameCollection.find({}, { _id: 1 }).toArray();
+
   client.close();
 
   return {
@@ -59,16 +61,6 @@ export async function getStaticProps(context) {
     .toArray();
 
   client.close();
-
-  console.log(selectedGame);
-
-  // Make some query to the server to see if the room exists or if the game is already started etc.
-  // should I allow spectator mode? Hmm...
-  // verifyRoomCode(roomCode);
-  // selectedGame.map((game) => ({
-  //         id: game._id.toString(),
-  //         player: [],
-  //       })),
 
   return {
     props: {
