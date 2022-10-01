@@ -31,11 +31,9 @@ async function handler(req, res) {
     res.status(201).json({
       message: 'Player added successfully',
     });
-  } catch (error) {
-    console.log(error.message);
-
+  } catch (err) {
     res.status(404).json({
-      message: error.message,
+      message: err.message,
     });
   }
 }
