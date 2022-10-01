@@ -6,7 +6,6 @@ async function handler(req, res) {
     if (req.method === 'POST') {
       const data = req.body;
       const { host } = data;
-      const roomName = generateRoomWithoutSeparator();
 
       //TODO: Have one connection for all the requests
       const client = await MongoClient.connect(process.env.MONGO_DB);
@@ -16,9 +15,10 @@ async function handler(req, res) {
       //TODO: Make sure there is no players with same name
 
       const result = await gameCollection.insertOne({
-        roomName,
         host,
-        players: [{ id: generateRoomWithoutSeparator(), name: host }],
+        players: [
+          { id: generateRoomWithoutSeparator(), name: host, role: null },
+        ],
         numOfCompletedRounds: 0,
         inProgress: false,
       });

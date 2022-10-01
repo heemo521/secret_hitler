@@ -20,7 +20,11 @@ async function handler(req, res) {
       { _id: ObjectId(roomCode) },
       {
         $push: {
-          players: { id: generateRoomWithoutSeparator(), name: newPlayer },
+          players: {
+            id: generateRoomWithoutSeparator(),
+            name: newPlayer,
+            role: null,
+          },
         },
       }
     );
