@@ -1,4 +1,6 @@
 import { MongoClient, ObjectId } from 'mongodb';
+import dbConnect from '../../utils/dbConnect';
+import Game from '../../models/game';
 import { generateRoomWithoutSeparator } from '../../components/utils/roomNameGenerator';
 
 async function handler(req, res) {

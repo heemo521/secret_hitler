@@ -6,7 +6,11 @@ const PlayerSchema = new mongoose.Schema({
     required: [true, 'Please add a host as the first player'],
     unique: true,
     trim: true,
-    maxLength: [25, 'The name can not be more than 25 characters'],
+    maxlength: [25, 'The name can not be more than 25 characters'],
+  },
+  role: {
+    type: String,
+    default: null,
   },
 });
 
@@ -16,7 +20,7 @@ const GameSchema = new mongoose.Schema({
     required: [true, 'Please add a host'],
     unique: false,
     trim: true,
-    maxLength: [25, 'The name can not be more than 25 characters'],
+    maxlength: [25, 'The name can not be more than 25 characters'],
   },
   players: [PlayerSchema],
   numOfCompletedRounds: {
