@@ -51,7 +51,7 @@ function Lobby({ games }) {
       </Head>
       <div>
         <Link href="/">
-          <p>Take Me Back Home Please</p>
+          <button>Back</button>
         </Link>
         <GameForm
           onCreateGame={createGameHandler}

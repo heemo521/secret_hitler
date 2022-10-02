@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import HowToPlay from '../components/home/HowToPlay';
+import Overview from '../components/home/Overview';
 import PropTypes from 'prop-types';
 
 function Home(props) {
@@ -18,9 +18,16 @@ function Home(props) {
         styles={{ width: '100%', display: 'flex', justifyContent: 'center' }}
       >
         <h1>SECRET HITLER</h1>
-        <HowToPlay />
+        <p>
+          The year is 1932. The place is pre-WWII Germany. In Secret Hitler,
+          players are German politicians attempting to hold a fragile Liberal
+          government together and stem the rising tide of Fascism. Watch out
+          though—there are secret Fascists among you, and one player is Secret
+          Hitler.
+        </p>
+        <Overview />
         <Link href="/lobby" styles={{ color: 'red' }}>
-          PLAY
+          <button> PLAY</button>
         </Link>
       </div>
     </>

@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/Image';
+import Image from 'next/image';
 import secret1 from '../../public/secret1.jpg';
 import PropTypes from 'prop-types';
 
@@ -25,9 +25,9 @@ function GameListItem({ game }) {
           {inProgress ? (
             <p>In Progress...</p>
           ) : (
-            <Link href={'/' + id}>
-              <p> Click to join!</p>
-            </Link>
+            // TODO: Should let the player join using the join button (name must be filled)
+            // Auto fill the room code or pass it down differently here.
+            <button disabled={true}> Click to join!</button>
           )}
           <p>Players: {players.length} / 10</p>
         </div>
