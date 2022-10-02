@@ -8,7 +8,11 @@ import PropTypes from 'prop-types';
 
 //TODO: Implement chat here so that player scan see start chatting as soon as they enter the waiting room
 function GameRoom({ gameData }) {
-  const [startGame, setStartGame] = useState(gameData.inProgress);
+  const [startGame, setStartGame] = useState(false);
+
+  useEffect(() => {
+    setStartGame(gameData.inProgress);
+  }, [gameData.inProgress]);
 
   const startGameHandler = async () => {
     try {
