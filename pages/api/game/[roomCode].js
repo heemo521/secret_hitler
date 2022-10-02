@@ -20,7 +20,6 @@ async function handler(req, res) {
         const message = 'Player added to the game successfully';
         res.status(201).json({ success: true, message });
       } catch (err) {
-        console.log(err.message);
         res.status(404).json({
           success: false,
           message: err.message,
