@@ -42,7 +42,7 @@ export async function getStaticPaths() {
   const games = await Game.find({}, { _id: 1 });
 
   return {
-    fallback: false,
+    fallback: true,
     paths: games.map((game) => ({
       params: { roomCode: game._id.toString() },
     })),
