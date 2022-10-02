@@ -41,3 +41,5 @@ async function SocketHandler(req, res) {
     });
   }
 }
+
+export default SocketHandler;
