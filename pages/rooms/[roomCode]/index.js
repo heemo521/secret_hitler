@@ -1,24 +1,20 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+
 import dbConnect from '../../../utils/dbConnect';
 import Game from '../../../models/game';
 
 import WaitingRoom from '../../../components/rooms/WaitingRoom';
 import GameBoard from '../../../components/game/GameBoard';
-import axios from 'axios';
+
 import PropTypes from 'prop-types';
 
 //TODO: Implement chat here so that player scan see start chatting as soon as they enter the waiting room
-
 function GameRoom({ gameData, isValidGame }) {
-  const [startGame, setStartGame] = useState(false);
+  const [startGame, setStartGame] = useState(gameData.inProgress);
 
-  // useEffect(() => {
-  //   console.log(gameData.inProgress);
-  //   setStartGame(gameData.inProgress);
-  // }, [gameData.inProgress]);
-
-  //Room does not exist should redirect the user to the lobby room
   if (!isValidGame) {
+    //Room does not exist should redirect the user to the lobby room
     return <h1>this room does not exist fool!!!</h1>;
   }
 
@@ -40,7 +36,7 @@ function GameRoom({ gameData, isValidGame }) {
 export async function getStaticPaths() {
   await dbConnect();
   const games = await Game.find({}, { _id: 1 });
-  console.log(games);
+
   return {
     fallback: false,
     paths: games.map((game) => ({
@@ -52,9 +48,8 @@ export async function getStaticPaths() {
 export async function getStaticProps(context) {
   await dbConnect();
   const { roomCode } = context.params;
-
   const selectedGame = await Game.findById(roomCode);
-  console.log(selectedGame);
+
   const { host, players, numOfCompletedRounds, inProgress } = selectedGame;
 
   return {
@@ -66,7 +61,7 @@ export async function getStaticProps(context) {
         players: players.map((player) => ({
           id: player._id.toString(),
           name: player.name,
-          role: null,
+          role: player.role,
         })),
         numOfCompletedRounds,
         inProgress: inProgress,

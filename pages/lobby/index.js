@@ -16,7 +16,6 @@ function Lobby({ games }) {
   const createGameHandler = async ({ enteredName }) => {
     try {
       //FIXME: Prevent double click...
-
       const res = await axios.post('/api/game', { host: enteredName });
       const { success, message, data } = res.data;
       const { roomCode } = data;
@@ -50,25 +49,19 @@ function Lobby({ games }) {
         <title>Secret Hitler Game Lobby</title>
       </Head>
       <div>
-        <h2>
-          <Link href="/">Take Me Back Home Please</Link>
-        </h2>
-
+        <Link href="/">Take Me Back Home Please</Link>
         <GameForm
           onCreateGame={createGameHandler}
           onJoinGame={joinGameHandler}
         />
-        {games ? <GameList games={games} /> : null}
+        {games.length > 0 ? <GameList games={games} /> : null}
       </div>
     </>
   );
 }
 
 export async function getStaticProps(context) {
-  dbConnect();
-  // used during production build process
-  // Redundant to fetch to the server
-  // const list = await axios('/api/active-games');
+  await dbConnect();
 
   const games = await Game.find({});
 
@@ -76,32 +69,17 @@ export async function getStaticProps(context) {
 
   return {
     props: {
-      games: [],
-      // games: games.map((game) => ({
-      //   id: game._id.toString(),
-      //   roomCode: game.roomCode,
-      //   player: game.userName,
-      //   image: game.image,
-      //   description: game.description,
-      //   //TODO: create a a schema and later get the number of players registered here
-
-      //   // players: game.players.length,
-      // })),
+      games: games.map((game) => ({
+        id: game._id.toString(),
+        host: game.host,
+        players: game.userName,
+        numOfCompletedRounds: game.numOfCompletedRounds,
+        inProgress: game.inProgress,
+      })),
     },
     revalidate: 1, // data is never older than 10 seconds
   };
 }
-
-// export async function getServerSideProps(context) {
-//   const req = context.req;
-//   const res = context.res;
-//   //runs on server after deployment
-//   return {
-//     props: {
-//       lobbyList: dummyGameData,
-//     },
-//   };
-// }
 
 Lobby.propTypes = {
   games: PropTypes.array.isRequired,
