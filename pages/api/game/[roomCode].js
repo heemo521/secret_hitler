@@ -28,7 +28,6 @@ async function handler(req, res) {
 
     case 'POST':
       try {
-        console.log('hello');
         const { newPlayer: name } = data;
 
         const gameData = await Game.updateOne(

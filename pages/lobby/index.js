@@ -18,7 +18,10 @@ function Lobby({ games }) {
       //FIXME: Prevent double click...
 
       const res = await axios.post('/api/game', { host: enteredName });
-      const { roomCode } = res.data.data;
+      const { success, message, data } = res.data;
+      const { roomCode } = data;
+
+      if (!success) throw new Error(message);
 
       router.replace(`/rooms/${roomCode}`);
     } catch (err) {
@@ -28,10 +31,12 @@ function Lobby({ games }) {
 
   const joinGameHandler = async ({ enteredName, enteredRoomCode }) => {
     try {
-      const res = await axios.patch(`/api/game/${enteredRoomCode}`, {
+      const res = await axios.post(`/api/game/${enteredRoomCode}`, {
         newPlayer: enteredName,
       });
-      console.log(res);
+      const { success, message } = res.data;
+
+      if (!success) throw new Error(message);
 
       router.replace(`/rooms/${enteredRoomCode}`);
     } catch (error) {
@@ -67,7 +72,7 @@ export async function getStaticProps(context) {
 
   const games = await Game.find({});
 
-  console.log(games);
+  console.log('games', games);
 
   return {
     props: {
