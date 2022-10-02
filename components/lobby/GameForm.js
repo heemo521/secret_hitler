@@ -1,10 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-// creates a new game with the given display name
-// else the user can also input room id to join an existing game
-
-// form components for the new game
 function GameForm({ onCreateGame, onJoinGame }) {
   const [name, setName] = useState('');
   const [roomId, setRoomId] = useState('');
@@ -41,17 +37,16 @@ function GameForm({ onCreateGame, onJoinGame }) {
           <input type="text" id="name" value={name} onChange={nameHandler} />
         </div>
         <div className="control">
-          <label htmlFor="room_code">Room Code</label>
+          <label htmlFor="roomId">Room Code</label>
           <input
             type="text"
-            id="room_code"
+            id="roomId"
             value={roomId}
             onChange={roomIdHandler}
           />
         </div>
         <div className="actions">
           <button
-            data-action="join"
             className="join-btn"
             disabled={name.length === 0 || roomId.length === 0}
             onClick={joinHandler}
@@ -59,7 +54,6 @@ function GameForm({ onCreateGame, onJoinGame }) {
             Join Game
           </button>
           <button
-            data-action="create"
             className="create-btn"
             onClick={createHandler}
             disabled={name.length === 0}

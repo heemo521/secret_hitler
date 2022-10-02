@@ -2,7 +2,6 @@ import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import HowToPlay from '../components/home/HowToPlay';
-
 import PropTypes from 'prop-types';
 
 function Home(props) {
