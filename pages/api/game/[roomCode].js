@@ -4,43 +4,21 @@ import Game from '../../../models/game';
 dbConnect();
 
 async function handler(req, res) {
-  const {
-    query: { roomCode: _id },
-    method,
-    body: data,
-  } = req;
+  const { query, method, body: data } = req;
+  const { roomCode: _id } = query;
 
   switch (method) {
-    // used for game status but don't need it
-    case 'GET':
-      try {
-        res.status(201).json({
-          success: true,
-          message: 'Get method does nothing at the moment',
-        });
-      } catch (err) {
-        res.status(404).json({
-          success: false,
-          message: err.message,
-        });
-      }
-      break;
-
     case 'POST':
       try {
         const { newPlayer: name } = data;
-
-        const gameData = await Game.updateOne(
-          { _id },
-          { $push: { players: { name } } }
-        );
+        const gameData = await Game.findByIdAndUpdate(_id, {
+          $push: { players: { name } },
+        });
 
         if (!gameData) throw new Error('Invalid room code');
 
-        res.status(201).json({
-          success: true,
-          message: 'Player added successfully',
-        });
+        const message = 'Player added to the game successfully';
+        res.status(201).json({ success: true, message });
       } catch (err) {
         console.log(err.message);
         res.status(404).json({
@@ -53,21 +31,12 @@ async function handler(req, res) {
     case 'PATCH':
       try {
         const { inProgress } = data;
-        const gameData = await Game.findByIdAndUpdate(
-          _id,
-          { inProgress },
-          {
-            new: true,
-            runValidators: true,
-          }
-        );
+        const gameData = await Game.findByIdAndUpdate(_id, { inProgress });
 
         if (!gameData) throw new Error('Invalid room code');
 
-        res.status(201).json({
-          success: true,
-          message: 'inProgress updated',
-        });
+        const message = 'inProgress updated';
+        res.status(201).json({ success: true, message });
       } catch (err) {
         res.status(404).json({
           success: false,
@@ -75,6 +44,7 @@ async function handler(req, res) {
         });
       }
       break;
+
     default:
       res.status(404).json({
         success: false,
