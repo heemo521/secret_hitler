@@ -24,7 +24,7 @@ function Lobby({ games }) {
 
       router.replace(`/rooms/${roomCode}`);
     } catch (err) {
-      console.log('failed creating Game');
+      console.log(err.message);
     }
   };
 
@@ -38,8 +38,8 @@ function Lobby({ games }) {
       if (!success) throw new Error(message);
 
       router.replace(`/rooms/${enteredRoomCode}`);
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err.message);
     }
   };
 
@@ -49,12 +49,14 @@ function Lobby({ games }) {
         <title>Secret Hitler Game Lobby</title>
       </Head>
       <div>
-        <Link href="/">Take Me Back Home Please</Link>
+        <Link href="/">
+          <p>Take Me Back Home Please</p>
+        </Link>
         <GameForm
           onCreateGame={createGameHandler}
           onJoinGame={joinGameHandler}
         />
-        {games.length > 0 ? <GameList games={games} /> : null}
+        {games.length > 0 && <GameList games={games} />}
       </div>
     </>
   );
@@ -62,17 +64,18 @@ function Lobby({ games }) {
 
 export async function getStaticProps(context) {
   await dbConnect();
-
   const games = await Game.find({});
-
-  console.log('games', games);
 
   return {
     props: {
       games: games.map((game) => ({
         id: game._id.toString(),
         host: game.host,
-        players: game.userName,
+        players: game.players.map((player) => ({
+          id: player._id.toString(),
+          name: player.name,
+          role: player.role,
+        })),
         numOfCompletedRounds: game.numOfCompletedRounds,
         inProgress: game.inProgress,
       })),
