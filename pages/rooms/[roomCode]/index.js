@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { MongoClient, ObjectId } from 'mongodb';
+import dbConnect from '../../../utils/dbConnect';
+import Game from '../../../models/game';
+
 import WaitingRoom from '../../../components/rooms/WaitingRoom';
 import GameBoard from '../../../components/game/GameBoard';
 import axios from 'axios';
@@ -7,13 +9,13 @@ import PropTypes from 'prop-types';
 
 //TODO: Implement chat here so that player scan see start chatting as soon as they enter the waiting room
 
-function Game({ gameData, isValidGame }) {
+function GameRoom({ gameData, isValidGame }) {
   const [startGame, setStartGame] = useState(false);
 
-  useEffect(() => {
-    console.log(gameData.inProgress);
-    setStartGame(gameData.inProgress);
-  }, [gameData.inProgress]);
+  // useEffect(() => {
+  //   console.log(gameData.inProgress);
+  //   setStartGame(gameData.inProgress);
+  // }, [gameData.inProgress]);
 
   //Room does not exist should redirect the user to the lobby room
   if (!isValidGame) {
@@ -21,9 +23,9 @@ function Game({ gameData, isValidGame }) {
   }
 
   const startGameHandler = async () => {
-    const res = await axios.patch('/api/startGame', {
-      roomCode: gameData.roomCode,
-    });
+    const inProgress = true;
+    const res = await axios.patch(`/api/game/${roomCode}`, { inProgress });
+
     if (res.status === 201) setStartGame(true);
   };
 
@@ -36,16 +38,11 @@ function Game({ gameData, isValidGame }) {
 }
 
 export async function getStaticPaths() {
-  const client = await MongoClient.connect(process.env.MONGO_DB);
-  const db = client.db();
-  const gameCollection = db.collection('secret_hitler');
-
-  const games = await gameCollection.find({}, { _id: 1 }).toArray();
-
-  client.close();
-
+  await dbConnect();
+  const games = await Game.find({}, { _id: 1 });
+  console.log(games);
   return {
-    fallback: true,
+    fallback: false,
     paths: games.map((game) => ({
       params: { roomCode: game._id.toString() },
     })),
@@ -53,34 +50,32 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps(context) {
-  const roomCode = context.params.roomCode;
+  await dbConnect();
+  const { roomCode } = context.params;
 
-  const client = await MongoClient.connect(process.env.MONGO_DB);
-  const db = client.db();
-  const gameCollection = db.collection('secret_hitler');
-  const [selectedGame] = await gameCollection
-    .find({
-      _id: ObjectId(roomCode),
-    })
-    .toArray();
-
-  client.close();
+  const selectedGame = await Game.findById(roomCode);
+  console.log(selectedGame);
+  const { host, players, numOfCompletedRounds, inProgress } = selectedGame;
 
   return {
     props: {
       isValidGame: selectedGame !== undefined,
       gameData: {
-        roomCode: selectedGame._id.toString(),
-        host: selectedGame.host,
-        players: selectedGame.players,
-        numOfCompletedRounds: selectedGame.numOfCompletedRounds,
-        inProgress: selectedGame.inProgress || false,
+        roomCode,
+        host,
+        players: players.map((player) => ({
+          id: player._id.toString(),
+          name: player.name,
+          role: null,
+        })),
+        numOfCompletedRounds,
+        inProgress: inProgress,
       },
     },
     revalidate: 1,
   };
 }
 
-Game.propTypes = {};
+GameRoom.propTypes = {};
 
-export default Game;
+export default GameRoom;

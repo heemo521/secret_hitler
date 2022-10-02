@@ -1,52 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { MongoClient } from 'mongodb';
+import dbConnect from '../../utils/dbConnect';
+import Game from '../../models/game';
 import io from 'socket.io-client';
 import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import GameForm from '../../components/lobby/GameForm';
 import GameList from '../../components/lobby/GameList';
-
-// import { dummyGameData } from '../../components/utils/dummyData';
 import PropTypes from 'prop-types';
-
-let socket;
 
 function Lobby({ games }) {
   const router = useRouter();
-  // console.log(props.games.length
-  const [userName, setUserName] = useState('');
-  const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([]);
-
-  // useEffect(() => {
-  //   socketInitializer();
-  // }, []);
-
-  // const socketInitializer = async () => {
-  //   // call the server so that the socket server will be up and running
-  //   await axios('/api/socket');
-
-  //   socket = io();
-
-  //   socket.on('newMessage', (message) =>
-  //     setMessages((messages) => [
-  //       ...messages,
-  //       {
-  //         author: message.author,
-  //         message: message.message,
-  //       },
-  //     ])
-  //   );
-  // };
 
   const createGameHandler = async ({ enteredName }) => {
     try {
       //FIXME: Prevent double click...
 
       const res = await axios.post('/api/game', { host: enteredName });
-      const { roomCode } = res.data;
+      const { roomCode } = res.data.data;
 
       router.replace(`/rooms/${roomCode}`);
     } catch (err) {
@@ -88,15 +60,12 @@ function Lobby({ games }) {
 }
 
 export async function getStaticProps(context) {
+  dbConnect();
   // used during production build process
   // Redundant to fetch to the server
   // const list = await axios('/api/active-games');
-  const client = await MongoClient.connect(process.env.MONGO_DB);
-  const db = client.db();
-  const gameCollection = db.collection('secret_hitler');
 
-  const games = await gameCollection.find().toArray();
-  client.close();
+  const games = await Game.find({});
 
   console.log(games);
 
