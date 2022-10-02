@@ -1,6 +1,6 @@
 import React from 'react';
 
-import GameItem from './GameItem';
+import GameItem from './GameListItem';
 import PropTypes from 'prop-types';
 // return a list of games from props
 
@@ -8,21 +8,12 @@ function GameList({ games }) {
   return (
     <ul>
       {games.map((game) => (
-        <GameItem
-          key={game.id}
-          id={game.id}
-          gameType={game.gameType} // TODO: sort by game etc.
-          image={game.image}
-          title={game.title}
-          description={game.description}
-        />
+        <GameItem id={game.id} key={game.id} game={game} />
       ))}
     </ul>
   );
 }
 
-// GameList.propTypes = {
-//   games: PropTypes.array.isRequired,
-// };
+GameList.propTypes = {};
 
 export default GameList;

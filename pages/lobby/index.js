@@ -16,6 +16,7 @@ function Lobby({ games }) {
   const createGameHandler = async ({ enteredName }) => {
     try {
       //FIXME: Prevent double click...
+      //TODO: Later implement private games, so that we don't list it on the lobby
       const res = await axios.post('/api/game', { host: enteredName });
       const { success, message, data } = res.data;
       const { roomCode } = data;
