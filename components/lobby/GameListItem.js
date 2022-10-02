@@ -8,7 +8,7 @@ function GameListItem({ game }) {
   const { id, host, inProgress, numOfCompletedRounds, players } = game;
 
   //TODO: idea for visualization of number of players (use the number of players
-  // out of the )
+  // out of 10  )
 
   return (
     <li>
