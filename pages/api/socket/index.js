@@ -1,4 +1,3 @@
-import { MongoClient } from 'mongodb';
 import { Server } from 'socket.io';
 
 async function SocketHandler(req, res) {
@@ -34,7 +33,6 @@ async function SocketHandler(req, res) {
     //   playerRegistered,
     // });
   } catch (error) {
-    //either the roomcode was not found or some other error
     console.log(error);
     res.status(404).json({
       message: 'The Socket Server is not available',
