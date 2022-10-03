@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useState } from 'react';
 
+//styles here
 export const Themes = {
   light: {
-    foreground: '#000000',
+    color: '#000000',
     background: '#eeeeee',
   },
   dark: {
-    foreground: '#ffffff',
+    color: '#ffffff',
     background: '#222222',
   },
 };
@@ -16,9 +17,11 @@ export const ThemeContext = createContext({
   toggleTheme: () => {},
 });
 
+// custom hook for theme & toggleTheme
 export function useTheme() {
   return useContext(ThemeContext);
 }
+
 export default function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(Themes.dark);
 

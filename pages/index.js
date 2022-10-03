@@ -1,8 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Overview from '../components/home/Overview';
-import { ThemeContext, useTheme } from '../context/theme-context';
+import ThemedButton from '../components/ui/ThemedButton';
+import { useTheme } from '../context/theme-context';
 
 import PropTypes from 'prop-types';
 
@@ -34,12 +35,17 @@ function Home(props) {
         <Link href="/lobby" styles={{ color: 'red' }}>
           <button> PLAY</button>
         </Link>
-        <button
-          style={{ backgroundColor: theme.background, color: theme.foreground }}
-          onClick={toggleTheme}
-        >
-          Theme Change
-        </button>
+        <div>
+          <button style={theme} onClick={toggleTheme}>
+            Theme Change
+          </button>
+          <ThemedButton
+            style={{ padding: '1em' }}
+            onClick={() => alert('ThemedButton!!!!')}
+          >
+            ThemedButton Test
+          </ThemedButton>
+        </div>
       </div>
     </>
   );
