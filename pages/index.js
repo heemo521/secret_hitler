@@ -1,6 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import Overview from '../components/home/Overview';
 import ThemedButton from '../components/ui/ThemedButton';
 import { useTheme } from '../context/theme-context';
@@ -9,6 +10,9 @@ import PropTypes from 'prop-types';
 
 function Home(props) {
   const { theme, toggleTheme } = useTheme();
+  const router = useRouter();
+
+  const buttonStyle = { padding: '1em' };
 
   return (
     <>
@@ -32,18 +36,19 @@ function Home(props) {
         </p>
         <Overview />
 
-        <Link href="/lobby" styles={{ color: 'red' }}>
-          <button> PLAY</button>
-        </Link>
+        <ThemedButton style={buttonStyle} onClick={() => router.push('/lobby')}>
+          PLAY
+        </ThemedButton>
+
         <div>
-          <button style={theme} onClick={toggleTheme}>
-            Theme Change
-          </button>
+          <ThemedButton style={buttonStyle} onClick={toggleTheme}>
+            Change Theme!
+          </ThemedButton>
           <ThemedButton
-            style={{ padding: '1em' }}
+            style={buttonStyle}
             onClick={() => alert('ThemedButton!!!!')}
           >
-            ThemedButton Test
+            Custom ThemedButton
           </ThemedButton>
         </div>
       </div>
