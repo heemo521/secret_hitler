@@ -1,11 +1,11 @@
 import '../styles/globals.css';
-import ThemeProvider from '../context/theme-context';
+import MainProvider from '../context/main-provider';
 
 function MyApp({ Component, pageProps }) {
   return (
-    <ThemeProvider>
+    <MainProvider>
       <Component {...pageProps} />
-    </ThemeProvider>
+    </MainProvider>
   );
 }
 

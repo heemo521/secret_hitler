@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
+import { useUser } from '../../context/user-context';
 import PropTypes from 'prop-types';
 
 function GameForm({ onCreateGame, onJoinGame }) {
-  const [name, setName] = useState('');
-  const [roomId, setRoomId] = useState('');
+  // const [name, setName] = useState('');
+  // const [roomId, setRoomId] = useState('');
+  const { name, nameHandler, roomId, roomIdHandler } = useUser();
 
-  const nameHandler = (e) => {
-    setName(e.target.value);
-  };
-  const roomIdHandler = (e) => {
-    setRoomId(e.target.value);
-  };
+  // const nameHandler = (e) => {
+  //   setName(e.target.value);
+  // };
+  // const roomIdHandler = (e) => {
+  //   setRoomId(e.target.value);
+  // };
 
   const createHandler = (e) => {
     e.preventDefault();
