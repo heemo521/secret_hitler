@@ -2,12 +2,12 @@ import React, { useContext } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Overview from '../components/home/Overview';
-import { ThemeContext } from '../context/theme-context';
+import { ThemeContext, useTheme } from '../context/theme-context';
 
 import PropTypes from 'prop-types';
 
 function Home(props) {
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <>
@@ -30,15 +30,16 @@ function Home(props) {
           Hitler.
         </p>
         <Overview />
+
+        <Link href="/lobby" styles={{ color: 'red' }}>
+          <button> PLAY</button>
+        </Link>
         <button
-          style={{ backgroundColor: theme.background }}
+          style={{ backgroundColor: theme.background, color: theme.foreground }}
           onClick={toggleTheme}
         >
           Theme Change
         </button>
-        <Link href="/lobby" styles={{ color: 'red' }}>
-          <button> PLAY</button>
-        </Link>
       </div>
     </>
   );
