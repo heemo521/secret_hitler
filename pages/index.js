@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Overview from '../components/home/Overview';
-import { ThemeContext, themes } from '../context/theme-context';
+import { ThemeContext } from '../context/theme-context';
 
 import PropTypes from 'prop-types';
 
