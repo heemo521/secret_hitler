@@ -2,9 +2,8 @@ import React from 'react';
 import Head from 'next/head';
 import dbConnect from '../../utils/dbConnect';
 import Game from '../../models/game';
-import io from 'socket.io-client';
+import { useUser } from '../../context/user-context';
 import axios from 'axios';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import GameForm from '../../components/lobby/GameForm';
 import GameList from '../../components/lobby/GameList';
@@ -12,7 +11,7 @@ import PropTypes from 'prop-types';
 
 function Lobby({ games }) {
   const router = useRouter();
-
+  const { displayNameHandler } = useUser();
   const createGameHandler = async ({ enteredName }) => {
     try {
       //FIXME: Prevent double click...
@@ -22,6 +21,8 @@ function Lobby({ games }) {
       const { roomCode } = data;
 
       if (!success) throw new Error(message);
+
+      displayNameHandler();
 
       router.replace(`/rooms/${roomCode}`);
     } catch (err) {
@@ -38,6 +39,8 @@ function Lobby({ games }) {
 
       if (!success) throw new Error(message);
 
+      displayNameHandler();
+
       router.replace(`/rooms/${enteredRoomCode}`);
     } catch (err) {
       console.log(err.message);
@@ -50,9 +53,7 @@ function Lobby({ games }) {
         <title>Secret Hitler Game Lobby</title>
       </Head>
       <div>
-        <Link href="/">
-          <button>Back</button>
-        </Link>
+        <button onClick={() => router.push('/')}>Back</button>
         <GameForm
           onCreateGame={createGameHandler}
           onJoinGame={joinGameHandler}

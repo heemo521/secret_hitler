@@ -1,14 +1,19 @@
 import React from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 import Overview from '../components/home/Overview';
-import PropTypes from 'prop-types';
+import ThemedButton from '../components/ui/ThemedButton';
+import { useTheme } from '../context/theme-context';
 
 function Home(props) {
+  const router = useRouter();
+  const { toggleTheme } = useTheme();
+  const buttonStyle = { padding: '1em' };
+
   return (
     <>
       <Head>
-        <title>Secret Hitler | PLAY ONLINE </title>
+        <title>Secret Hitler | PLAY ONLINE</title>
         <meta
           name="description"
           content="A simple, lightweight, and flexible JavaScript library for building websites"
@@ -26,9 +31,22 @@ function Home(props) {
           Hitler.
         </p>
         <Overview />
-        <Link href="/lobby" styles={{ color: 'red' }}>
-          <button> PLAY</button>
-        </Link>
+
+        <ThemedButton style={buttonStyle} onClick={() => router.push('/lobby')}>
+          PLAY
+        </ThemedButton>
+
+        <div>
+          <ThemedButton style={buttonStyle} onClick={toggleTheme}>
+            Change Theme!
+          </ThemedButton>
+          <ThemedButton
+            style={buttonStyle}
+            onClick={() => alert('ThemedButton!!!!')}
+          >
+            Custom ThemedButton
+          </ThemedButton>
+        </div>
       </div>
     </>
   );
