@@ -58,6 +58,7 @@ export async function getStaticProps(context) {
   await dbConnect();
   const { roomCode } = context.params;
   const selectedGame = await Game.findById(roomCode);
+  console.log(selectedGame);
   const { host, players, numOfCompletedRounds, isInProgress } = selectedGame;
   const gamePlayers = players.map((player) => ({
     id: player._id.toString(),
@@ -74,7 +75,7 @@ export async function getStaticProps(context) {
         host,
         players: gamePlayers,
         numOfCompletedRounds,
-        isInProgress: isInProgress || false,
+        isInProgress,
       },
     },
     revalidate: 1,
