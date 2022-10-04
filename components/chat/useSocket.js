@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, createContext } from 'react';
 import io from 'socket.io-client';
 import axios from 'axios';
 
-function useSocket(url) {
+function useSocket() {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
     let socketIO;
 
     axios('/api/socket').then(() => {
-      socketIO = io();
+      socketIO = io({ reconnect: false });
       setSocket(socketIO);
     });
+
     function cleanUp() {
       if (socketIO) socketIO.disconnect();
     }
@@ -21,7 +22,5 @@ function useSocket(url) {
 
   return socket;
 }
-
-useSocket.propTypes = {};
 
 export default useSocket;
