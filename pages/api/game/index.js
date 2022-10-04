@@ -14,7 +14,7 @@ async function handler(req, res) {
         const gameData = await Game.create({
           host,
           players,
-          inProgress: false,
+          isInProgress: false,
           numOfCompletedRounds: 0,
         });
 

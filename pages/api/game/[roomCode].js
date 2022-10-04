@@ -29,12 +29,12 @@ async function handler(req, res) {
 
     case 'PATCH':
       try {
-        const { inProgress } = data;
-        const gameData = await Game.findByIdAndUpdate(_id, { inProgress });
+        const { isInProgress } = data;
+        const gameData = await Game.findByIdAndUpdate(_id, { isInProgress });
 
         if (!gameData) throw new Error('Invalid room code');
 
-        const message = 'inProgress updated';
+        const message = 'isInProgress updated';
         res.status(201).json({ success: true, message });
       } catch (err) {
         res.status(404).json({
