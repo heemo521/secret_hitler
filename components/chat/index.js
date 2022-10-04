@@ -2,28 +2,24 @@ import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import axios from 'axios';
 import { useUser } from '../../context/user-context';
+import useSocket from './useSocket';
 import PropTypes from 'prop-types';
 import ThemedButton from '../ui/ThemedButton';
 
 //TODO: Need to refactor socket implemented here so we can use it for
 // more than just a chat
-let socket;
 
 function Chat(props) {
   //this roomId should be used to send the message
   //to a specific room
   const { displayName, roomId } = useUser();
+  const socket = useSocket();
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    socketInitializer();
-  }, []);
+    if (!socket) return;
 
-  // TODO: Move this socketInitializer outside
-  const socketInitializer = async () => {
-    await axios('/api/socket');
-    socket = io();
     socket.on('connect', () => {
       console.log('connected to socket with id ' + socket.id);
     });
@@ -33,13 +29,14 @@ function Chat(props) {
         { author: msg.author, message: msg.message },
       ]);
     });
-  };
+  }, [socket]);
 
   const messageInputHandler = (e) => {
     setMessage(e.target.value);
   };
 
   const sendMessage = async () => {
+    console.log('Sending message');
     socket.emit('createdMessage', {
       author: displayName,
       message,
