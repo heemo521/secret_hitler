@@ -2,9 +2,8 @@ import React from 'react';
 import Head from 'next/head';
 import dbConnect from '../../utils/dbConnect';
 import Game from '../../models/game';
-import io from 'socket.io-client';
+
 import axios from 'axios';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import GameForm from '../../components/lobby/GameForm';
 import GameList from '../../components/lobby/GameList';

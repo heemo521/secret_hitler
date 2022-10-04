@@ -7,8 +7,12 @@ async function SocketHandler(req, res) {
 
     if (res.socket.server.io) {
       console.log('Socket is already set up!');
-      return res.end();
+      res.end();
+      return;
     }
+
+    // if (res.socket.server.io) return res.end();
+
     const io = new Server(res.socket.server);
     res.socket.server.io = io;
 
@@ -28,10 +32,6 @@ async function SocketHandler(req, res) {
 
     console.log('Socket in progress');
     res.end();
-    // res.status(201).json({
-    //   message: 'Say hello to socket api!',
-    //   playerRegistered,
-    // });
   } catch (error) {
     console.log(error);
     res.status(404).json({

@@ -4,6 +4,7 @@ import dbConnect from '../../../utils/dbConnect';
 import Game from '../../../models/game';
 import WaitingRoom from '../../../components/rooms/WaitingRoom';
 import GameBoard from '../../../components/game/GameBoard';
+import Chat from '../../../components/chat';
 import PropTypes from 'prop-types';
 
 //TODO: Implement chat here so that player scan see start chatting as soon as they enter the waiting room
@@ -29,12 +30,16 @@ function GameRoom({ gameData }) {
     }
   };
 
-  if (!startGame) {
-    return <WaitingRoom onStartGame={startGameHandler} gameData={gameData} />;
-  }
-
-  //When Game Starts, We'll redirect the users to the game room
-  return <GameBoard gameData={gameData} />;
+  return (
+    <>
+      {startGame ? (
+        <GameBoard gameData={gameData} />
+      ) : (
+        <WaitingRoom onStartGame={startGameHandler} gameData={gameData} />
+      )}
+      <Chat />
+    </>
+  );
 }
 
 export async function getStaticPaths() {

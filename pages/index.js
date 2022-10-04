@@ -1,38 +1,19 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Head from 'next/head';
-import io from 'socket.io-client';
 import { useRouter } from 'next/router';
 import Overview from '../components/home/Overview';
 import ThemedButton from '../components/ui/ThemedButton';
 import { useTheme } from '../context/theme-context';
-import axios from 'axios';
 
-import PropTypes from 'prop-types';
-
-let socket;
 function Home(props) {
   const router = useRouter();
   const { toggleTheme } = useTheme();
   const buttonStyle = { padding: '1em' };
 
-  useEffect(() => {
-    socketInitializer();
-  }, []);
-
-  const socketInitializer = async () => {
-    await axios('/api/socket');
-
-    socket = io();
-
-    socket.on('newIncomingMessage', (msg) => {
-      // setMeesages((curMsg) => [...curMsg, {author: msg.author, message: msg.message}])
-    });
-  };
-
   return (
     <>
       <Head>
-        <title>Secret Hitler | PLAY ONLINE </title>
+        <title>Secret Hitler | PLAY ONLINE</title>
         <meta
           name="description"
           content="A simple, lightweight, and flexible JavaScript library for building websites"
