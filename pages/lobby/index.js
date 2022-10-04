@@ -2,7 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 import dbConnect from '../../utils/dbConnect';
 import Game from '../../models/game';
-
+import { useUser } from '../../context/user-context';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import GameForm from '../../components/lobby/GameForm';
@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 
 function Lobby({ games }) {
   const router = useRouter();
-
+  const { displayNameHandler } = useUser();
   const createGameHandler = async ({ enteredName }) => {
     try {
       //FIXME: Prevent double click...
@@ -21,6 +21,8 @@ function Lobby({ games }) {
       const { roomCode } = data;
 
       if (!success) throw new Error(message);
+
+      displayNameHandler();
 
       router.replace(`/rooms/${roomCode}`);
     } catch (err) {
@@ -36,6 +38,8 @@ function Lobby({ games }) {
       const { success, message } = res.data;
 
       if (!success) throw new Error(message);
+
+      displayNameHandler();
 
       router.replace(`/rooms/${enteredRoomCode}`);
     } catch (err) {

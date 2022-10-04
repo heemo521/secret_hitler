@@ -21,7 +21,7 @@ async function SocketHandler(req, res) {
         socket.broadcast.emit('newMessage', message);
       };
 
-      socket.on('createMessage', createMessage);
+      socket.on('createdMessage', createMessage);
     };
 
     const onConnection = (socket) => {
