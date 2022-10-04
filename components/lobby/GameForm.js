@@ -3,16 +3,17 @@ import { useUser } from '../../context/user-context';
 import PropTypes from 'prop-types';
 
 function GameForm({ onCreateGame, onJoinGame }) {
-  // const [name, setName] = useState('');
-  // const [roomId, setRoomId] = useState('');
   const { name, nameHandler, roomId, roomIdHandler } = useUser();
 
-  // const nameHandler = (e) => {
-  //   setName(e.target.value);
-  // };
-  // const roomIdHandler = (e) => {
-  //   setRoomId(e.target.value);
-  // };
+  const handleKeypress = (e) => {
+    if (e.keyCode === 13) {
+      if (!roomId) {
+        onCreateGame({ enteredName: name });
+      } else {
+        onJoinGame({ enteredName: name, enteredRoomCode: roomId });
+      }
+    }
+  };
 
   const createHandler = (e) => {
     e.preventDefault();
@@ -36,7 +37,13 @@ function GameForm({ onCreateGame, onJoinGame }) {
       <form className="form">
         <div className="control">
           <label htmlFor="name">Display Name</label>
-          <input type="text" id="name" value={name} onChange={nameHandler} />
+          <input
+            type="text"
+            id="name"
+            value={name}
+            onChange={nameHandler}
+            onKeyUp={handleKeypress}
+          />
         </div>
         <div className="control">
           <label htmlFor="roomId">Room Code</label>
@@ -45,6 +52,7 @@ function GameForm({ onCreateGame, onJoinGame }) {
             id="roomId"
             value={roomId}
             onChange={roomIdHandler}
+            onKeyUp={handleKeypress}
           />
         </div>
         <div className="actions">

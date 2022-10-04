@@ -22,6 +22,8 @@ export function useTheme() {
   return useContext(ThemeContext);
 }
 
+// use => const { theme, toggleTheme } = useTheme();
+
 export default function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(Themes.dark);
 

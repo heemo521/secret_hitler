@@ -5,11 +5,9 @@ import PropTypes from 'prop-types';
 
 function MainProvider({ children }) {
   return (
-    <>
-      <ThemeProvider>
-        <UserProvider>{children}</UserProvider>
-      </ThemeProvider>
-    </>
+    <ThemeProvider>
+      <UserProvider>{children}</UserProvider>
+    </ThemeProvider>
   );
 }
 

@@ -1,18 +1,33 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
+import io from 'socket.io-client';
 import { useRouter } from 'next/router';
 import Overview from '../components/home/Overview';
 import ThemedButton from '../components/ui/ThemedButton';
 import { useTheme } from '../context/theme-context';
+import axios from 'axios';
 
 import PropTypes from 'prop-types';
 
+let socket;
 function Home(props) {
-  const { theme, toggleTheme } = useTheme();
   const router = useRouter();
-
+  const { toggleTheme } = useTheme();
   const buttonStyle = { padding: '1em' };
+
+  useEffect(() => {
+    socketInitializer();
+  }, []);
+
+  const socketInitializer = async () => {
+    await axios('/api/socket');
+
+    socket = io();
+
+    socket.on('newIncomingMessage', (msg) => {
+      // setMeesages((curMsg) => [...curMsg, {author: msg.author, message: msg.message}])
+    });
+  };
 
   return (
     <>

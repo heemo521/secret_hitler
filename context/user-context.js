@@ -1,7 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
 
-//styles here
-
 export const UserContext = createContext({
   name: '',
   nameHandler: () => {},
@@ -9,7 +7,6 @@ export const UserContext = createContext({
   roomIdHandler: () => {},
 });
 
-// custom hook for theme & toggleTheme
 export function useUser() {
   return useContext(UserContext);
 }

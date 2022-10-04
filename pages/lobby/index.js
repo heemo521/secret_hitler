@@ -50,9 +50,7 @@ function Lobby({ games }) {
         <title>Secret Hitler Game Lobby</title>
       </Head>
       <div>
-        <Link href="/">
-          <button>Back</button>
-        </Link>
+        <button onClick={() => router.push('/')}>Back</button>
         <GameForm
           onCreateGame={createGameHandler}
           onJoinGame={joinGameHandler}

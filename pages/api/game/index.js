@@ -11,14 +11,17 @@ async function handler(req, res) {
       try {
         const { host } = data;
         const players = [{ name: host }];
-        const game = await Game.create({ host, players });
+        const gameData = await Game.create({ host, players });
+
+        if (!gameData) throw new Error('Invalid room code');
 
         res.status(201).json({
           success: true,
           message: 'Success',
-          data: { roomCode: game.id },
+          data: { roomCode: gameData.id },
         });
       } catch (err) {
+        console.log(err);
         res.status(404).json({
           success: false,
           message: err.message,
