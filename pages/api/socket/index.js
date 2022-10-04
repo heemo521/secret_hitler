@@ -1,9 +1,8 @@
 import { Server } from 'socket.io';
 
-async function SocketHandler(req, res) {
+function SocketHandler(req, res) {
   try {
     //TODO: We will be connecting to this api endpoint for the socket connection to the client rooms page with same room code id.
-    console.log(res.socket);
 
     if (res.socket.server.io) {
       console.log('Socket is already set up!');
@@ -18,6 +17,7 @@ async function SocketHandler(req, res) {
 
     const messageHandler = (io, socket) => {
       const createMessage = (message) => {
+        console.log('message', JSON.stringify(message));
         socket.broadcast.emit('newMessage', message);
       };
 
@@ -33,7 +33,7 @@ async function SocketHandler(req, res) {
     console.log('Socket in progress');
     res.end();
   } catch (error) {
-    console.log(error);
+    console.log('socket error ', error.message);
     res.status(404).json({
       message: 'The Socket Server is not available',
     });
