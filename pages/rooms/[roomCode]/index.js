@@ -12,8 +12,10 @@ function GameRoom({ gameData }) {
   const [startGame, setStartGame] = useState(false);
 
   useEffect(() => {
-    setStartGame(gameData.isInProgress);
-  }, [gameData.isInProgress]);
+    if (gameData) {
+      setStartGame(gameData.isInProgress);
+    }
+  }, [gameData]);
 
   const startGameHandler = async () => {
     try {
@@ -29,6 +31,8 @@ function GameRoom({ gameData }) {
       return;
     }
   };
+
+  if (!gameData) return null;
 
   return (
     <>
