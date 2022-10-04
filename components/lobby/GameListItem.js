@@ -5,7 +5,7 @@ import secret1 from '../../public/secret1.jpg';
 import PropTypes from 'prop-types';
 
 function GameListItem({ game }) {
-  const { id, host, inProgress, numOfCompletedRounds, players } = game;
+  const { id, host, isInProgress, numOfCompletedRounds, players } = game;
 
   //TODO: idea for visualization of number of players (use the number of players
   // out of 10  )
@@ -22,7 +22,7 @@ function GameListItem({ game }) {
         <div>
           <p>Game Host: {host}</p>
           <p>Round {numOfCompletedRounds + 1}</p>
-          {inProgress ? (
+          {isInProgress ? (
             <p>In Progress...</p>
           ) : (
             // TODO: Should let the player join using the join button (name must be filled)

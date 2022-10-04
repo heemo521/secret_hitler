@@ -30,7 +30,7 @@ const GameSchema = new mongoose.Schema({
     max: 100,
     required: [true, 'Please add a round number'],
   },
-  inProgress: {
+  isInProgress: {
     type: Boolean,
     default: false,
   },

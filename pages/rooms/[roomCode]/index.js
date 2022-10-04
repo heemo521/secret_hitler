@@ -12,13 +12,13 @@ function GameRoom({ gameData }) {
   const [startGame, setStartGame] = useState(false);
 
   useEffect(() => {
-    setStartGame(gameData.inProgress);
-  }, [gameData.inProgress]);
+    setStartGame(gameData.isInProgress);
+  }, [gameData.isInProgress]);
 
   const startGameHandler = async () => {
     try {
       const uri = `/api/game/${gameData.roomCode}`;
-      const res = await axios.patch(uri, { inProgress: true });
+      const res = await axios.patch(uri, { isInProgress: true });
       const { success, message } = res.data;
 
       if (!success) throw new Error(message);
@@ -58,12 +58,14 @@ export async function getStaticProps(context) {
   await dbConnect();
   const { roomCode } = context.params;
   const selectedGame = await Game.findById(roomCode);
-  const { host, players, numOfCompletedRounds, inProgress } = selectedGame;
+  const { host, players, numOfCompletedRounds, isInProgress } = selectedGame;
   const gamePlayers = players.map((player) => ({
     id: player._id.toString(),
     name: player.name,
     role: player.role,
   }));
+
+  console.log('isInProgress: ' + isInProgress);
 
   return {
     props: {
@@ -72,7 +74,7 @@ export async function getStaticProps(context) {
         host,
         players: gamePlayers,
         numOfCompletedRounds,
-        inProgress,
+        isInProgress: isInProgress || false,
       },
     },
     revalidate: 1,

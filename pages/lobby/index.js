@@ -79,7 +79,7 @@ export async function getStaticProps(context) {
           role: player.role,
         })),
         numOfCompletedRounds: game.numOfCompletedRounds,
-        inProgress: game.inProgress,
+        isInProgress: game.isInProgress,
       })),
     },
     revalidate: 1, // data is never older than 10 seconds
