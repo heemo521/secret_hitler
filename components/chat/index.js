@@ -5,6 +5,8 @@ import { useUser } from '../../context/user-context';
 import PropTypes from 'prop-types';
 import ThemedButton from '../ui/ThemedButton';
 
+//TODO: Need to refactor socket implemented here so we can use it for
+// more than just a chat
 let socket;
 
 function Chat(props) {
@@ -18,9 +20,13 @@ function Chat(props) {
     socketInitializer();
   }, []);
 
+  // TODO: Move this socketInitializer outside
   const socketInitializer = async () => {
     await axios('/api/socket');
     socket = io();
+    socket.on('connect', () => {
+      console.log('connected to socket with id ' + socket.id);
+    });
     socket.on('newMessage', (msg) => {
       setMessages((curMsg) => [
         ...curMsg,
@@ -37,8 +43,14 @@ function Chat(props) {
     socket.emit('createdMessage', {
       author: displayName,
       message,
+      //TODO: roomId,send this to socket server
+      // and only send to users connected to this room
     });
     setMessage('');
+  };
+
+  const keyPressHandler = (e) => {
+    if (e.keyCode === 13 && message) sendMessage();
   };
 
   return (
@@ -58,6 +70,7 @@ function Chat(props) {
           type="text"
           onChange={messageInputHandler}
           value={message}
+          onKeyUp={keyPressHandler}
           placeholder="Enter new message..."
         />
         <ThemedButton onClick={sendMessage}>Send</ThemedButton>

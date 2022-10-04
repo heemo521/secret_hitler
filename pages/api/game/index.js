@@ -11,7 +11,12 @@ async function handler(req, res) {
       try {
         const { host } = data;
         const players = [{ name: host }];
-        const gameData = await Game.create({ host, players });
+        const gameData = await Game.create({
+          host,
+          players,
+          inProgress: false,
+          numOfCompletedRounds: 0,
+        });
 
         if (!gameData) throw new Error('Invalid room code');
 
